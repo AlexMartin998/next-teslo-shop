@@ -1,6 +1,6 @@
 import Head from 'next/head';
 
-import { Navbar } from '@/shared/components';
+import { Navbar, SideMenu } from '@/shared/components';
 
 export interface ShopLayoutProps {
   title: string;
@@ -36,7 +36,7 @@ const ShopLayout: React.FC<ShopLayoutProps> = ({
         <Navbar />
       </nav>
 
-      {/* Sidebar */}
+      <SideMenu />
 
       <main
         style={{ margin: '80px auto', maxWidth: '1440px', padding: '0 30px' }}
