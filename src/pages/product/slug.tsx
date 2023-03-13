@@ -1,11 +1,11 @@
 import { NextPage } from 'next';
-import 'react-slideshow-image/dist/styles.css'
-
+import 'react-slideshow-image/dist/styles.css';
 
 import { ShopLayout } from '@/layouts';
 import { initialData } from '@/database/products';
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { ProductSlidesShow } from '@/products/common';
+import { ItemCounter } from '@/shared/components';
 
 const product = initialData.products[0];
 
@@ -27,10 +27,10 @@ const ProductPage: NextPage = () => {
               ${product.price}
             </Typography>
 
-            {/* quantity */}
+            {/* Quantity: */}
             <Box sx={{ my: 2 }}>
               <Typography variant="subtitle2">Quantity</Typography>
-              {/* item counter */}
+              <ItemCounter />
             </Box>
 
             {/* add to cart */}
