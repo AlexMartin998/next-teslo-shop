@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import NextLink from 'next/link';
 import {
   Grid,
   Card,
@@ -8,7 +10,6 @@ import {
 } from '@mui/material';
 
 import { IProduct } from '@/interfaces';
-import { useState } from 'react';
 
 interface ProductCardProps {
   product: IProduct;
@@ -30,19 +31,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <Card>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            image={
-              isHovered
-                ? `products/${product.images[1]}`
-                : `products/${product.images[0]}`
-            }
-            alt={product.title}
-            className="fadeIn"
-            // onLoad={() => console.log('loaded')}
-          />
-        </CardActionArea>
+        <NextLink href={`/product/slug`} prefetch={false}>
+          <CardActionArea>
+            <CardMedia
+              component="img"
+              image={
+                isHovered
+                  ? `products/${product.images[1]}`
+                  : `products/${product.images[0]}`
+              }
+              alt={product.title}
+              className="fadeIn"
+              // onLoad={() => console.log('loaded')}
+            />
+          </CardActionArea>
+        </NextLink>
       </Card>
 
       <Box sx={{ mt: 1 }} className="fadeIn">
