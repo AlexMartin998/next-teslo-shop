@@ -1,7 +1,7 @@
 interface ProductSceneProps {}
 
 const ProductScene: React.FC<ProductSceneProps> = () => {
-  return <div>ProductScene</div>;
+  return <h1>s</h1>;
 };
 
 export default ProductScene;
