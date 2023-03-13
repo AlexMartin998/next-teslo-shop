@@ -1,3 +1,6 @@
+import type { SvgIconTypeMap } from '@mui/material';
+import type { OverridableComponent } from '@mui/material/OverridableComponent';
+
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
@@ -9,9 +12,9 @@ import MaleOutlinedIcon from '@mui/icons-material/MaleOutlined';
 import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
 
 export interface NavLinks {
-  path: any;
+  path: string;
   title: string;
-  Icon: any;
+  Icon: OverridableComponent<SvgIconTypeMap<{}, 'svg'>>;
 }
 
 type NavLinksId = 'home' | 'features' | 'product' | 'clients' | '/';

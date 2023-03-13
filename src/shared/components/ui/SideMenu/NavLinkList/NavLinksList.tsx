@@ -5,6 +5,7 @@ import {
   ListItemText,
   capitalize,
 } from '@mui/material';
+
 import { NavLinks } from '../navLinks';
 
 export interface NavLinksListProps extends NavLinks {}
