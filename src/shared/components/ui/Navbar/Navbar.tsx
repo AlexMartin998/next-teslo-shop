@@ -36,10 +36,10 @@ const Navbar: React.FC<NavbarProps> = () => {
             <NextLink href="/category/men" passHref>
               <Button>Men</Button>
             </NextLink>
-            <NextLink href="/category/men" passHref>
+            <NextLink href="/category/women" passHref>
               <Button>Women</Button>
             </NextLink>
-            <NextLink href="/category/men" passHref>
+            <NextLink href="/category/kids" passHref>
               <Button>Kids</Button>
             </NextLink>
           </Box>
