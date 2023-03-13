@@ -1,5 +1,7 @@
 import Head from 'next/head';
 
+import { Navbar } from '@/shared/components';
+
 export interface ShopLayoutProps {
   title: string;
   pageDescription: string;
@@ -30,7 +32,9 @@ const ShopLayout: React.FC<ShopLayoutProps> = ({
         <meta name="keywords" content="openjira, tasks, todos, manage" />
       </Head>
 
-      <nav>{/* Navbar */}</nav>
+      <nav>
+        <Navbar />
+      </nav>
 
       {/* Sidebar */}
 
