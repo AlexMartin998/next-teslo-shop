@@ -19,7 +19,7 @@ const ShopLayout: React.FC<ShopLayoutProps> = ({
   return (
     <>
       <Head>
-        <title>{title} | TesloShop</title>
+        <title>{`${title} | TesloShop`}</title>
 
         <meta name="description" content={pageDescription} />
 

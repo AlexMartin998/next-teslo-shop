@@ -10,7 +10,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title }) => {
   return (
     <>
       <Head>
-        <title>{title} | TesloShop</title>
+        <title>{`${title} | TesloShop`}</title>
       </Head>
 
       <main>

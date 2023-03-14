@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 
-import { initialData } from '@/database/products';
+import { initialData } from '@/api/db/seed';
 import { ProductList } from './components';
 
 interface HomeSceneProps {}

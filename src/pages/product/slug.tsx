@@ -2,7 +2,8 @@ import { NextPage } from 'next';
 import 'react-slideshow-image/dist/styles.css';
 
 import { ShopLayout } from '@/layouts';
-import { initialData } from '@/database/products';
+
+import { initialData } from '@/api/db/seed';
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { ProductSlidesShow, SizeSelector } from '@/teslo-shop/common';
 import { ItemCounter } from '@/shared/components';

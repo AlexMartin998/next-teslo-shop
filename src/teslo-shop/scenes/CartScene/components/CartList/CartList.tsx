@@ -8,7 +8,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import { initialData } from '@/database/products';
+import { initialData } from '@/api/db/seed-data/products';
 import { ItemCounter } from '@/shared/components';
 
 interface CartListProps {
