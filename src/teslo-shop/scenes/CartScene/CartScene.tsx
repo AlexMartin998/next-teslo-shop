@@ -14,16 +14,16 @@ export interface CartSceneProps {}
 const CartScene: React.FC<CartSceneProps> = () => {
   return (
     <>
-      <Typography variant="h1" component="h1">
+      <Typography variant="h1" component="h1" mb={4}>
         Shopping Cart
       </Typography>
 
-      <Grid container>
+      <Grid container spacing={3}>
         <Grid item xs={12} sm={7}>
-          <CartList />
+          <CartList editable />
         </Grid>
 
-        <Grid item xs={12} sm={7}>
+        <Grid item xs={12} sm={5}>
           <Card className="summary-card">
             <CardContent>
               <Typography>Purchase Order</Typography>

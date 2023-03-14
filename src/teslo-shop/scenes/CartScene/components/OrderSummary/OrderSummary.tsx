@@ -30,7 +30,7 @@ const OrdenSummary: React.FC<OrdenSummaryProps> = () => {
         <Typography variant="subtitle1">Total</Typography>
       </Grid>
       <Grid item xs={6} sx={{ mt: 2 }} display="flex" justifyContent="end">
-        <Typography variant="subtitle1">${13.12}</Typography>
+        <Typography variant="subtitle1">${186.12}</Typography>
       </Grid>
     </Grid>
   );
