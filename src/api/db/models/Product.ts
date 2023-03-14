@@ -56,6 +56,9 @@ const ProductSchema = new Schema(
   { timestamps: true, versionKey: false }
 );
 
+// idex
+ProductSchema.index({ title: 'text', tags: 'text' });
+
 // si ya existe el model usalo, sino crealo
 const ProductModel: Model<IProduct> =
   mongoose.models.Product || model('Product', ProductSchema);
