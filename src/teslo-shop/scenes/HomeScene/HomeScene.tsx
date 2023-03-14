@@ -1,3 +1,4 @@
+import { FullScreenLoading } from '@/shared/components';
 import { Typography } from '@mui/material';
 
 import { ProductList } from './components';
@@ -12,7 +13,7 @@ const HomeScene: React.FC<HomeSceneProps> = ({ products, isLoading }) => {
   return (
     <>
       {isLoading ? (
-        <h1>Loading...</h1>
+        <FullScreenLoading />
       ) : (
         <>
           <Typography variant="h1" component="h1">

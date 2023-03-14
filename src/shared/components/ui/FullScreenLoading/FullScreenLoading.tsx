@@ -6,12 +6,14 @@ const FullScreenLoading: React.FC<FullScreenLoadingProps> = () => {
   return (
     <Box
       display="flex"
-      sx={{ flexDirection: { xs: 'column', sm: 'row' } }}
+      flexDirection="column"
       justifyContent="center"
       alignItems="center"
       height="calc(100vh - 200px)"
     >
-      <Typography>Loading...</Typography>
+      <Typography sx={{ mb: 3, fontSize: '24px', fontWeight: 200 }}>
+        Loading...
+      </Typography>
 
       <CircularProgress thickness={2} />
     </Box>

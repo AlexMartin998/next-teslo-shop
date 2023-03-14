@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app';
 import { CssBaseline, ThemeProvider } from '@mui/material';
-import useSWR, { SWRConfig } from 'swr';
+import { SWRConfig } from 'swr';
 
 import { lightTheme } from '@/themes';
 import '@/styles/globals.css';
