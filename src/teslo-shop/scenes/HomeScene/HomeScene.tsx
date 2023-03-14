@@ -1,21 +1,30 @@
 import { Typography } from '@mui/material';
 
-import { initialData } from '@/api/db/seed';
 import { ProductList } from './components';
 
-interface HomeSceneProps {}
+interface HomeSceneProps {
+  products: any;
+  error?: any;
+  isLoading: boolean;
+}
 
-const HomeScene: React.FC<HomeSceneProps> = () => {
+const HomeScene: React.FC<HomeSceneProps> = ({ products, isLoading }) => {
   return (
     <>
-      <Typography variant="h1" component="h1">
-        Shop
-      </Typography>
-      <Typography variant="h2" sx={{ mb: 1 }}>
-        All products
-      </Typography>
+      {isLoading ? (
+        <h1>Loading...</h1>
+      ) : (
+        <>
+          <Typography variant="h1" component="h1">
+            Shop
+          </Typography>
+          <Typography variant="h2" sx={{ mb: 1 }}>
+            All products
+          </Typography>
 
-      <ProductList products={initialData.products as any} />
+          <ProductList products={products} />
+        </>
+      )}
     </>
   );
 };
