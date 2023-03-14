@@ -4,7 +4,7 @@ import 'react-slideshow-image/dist/styles.css';
 import { ShopLayout } from '@/layouts';
 import { initialData } from '@/database/products';
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
-import { ProductSlidesShow, SizeSelector } from '@/products/common';
+import { ProductSlidesShow, SizeSelector } from '@/teslo-shop/common';
 import { ItemCounter } from '@/shared/components';
 
 const product = initialData.products[0];

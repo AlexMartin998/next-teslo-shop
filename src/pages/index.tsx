@@ -1,5 +1,5 @@
 import { ShopLayout } from '@/layouts';
-import { HomeScene } from '@/products';
+import { HomeScene } from '@/teslo-shop';
 
 export default function HomePage() {
   return (
