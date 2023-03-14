@@ -7,7 +7,7 @@ import {
   Box,
   Button,
 } from '@mui/material';
-import { CartList } from './components';
+import { CartList, OrderSummary } from './components';
 
 export interface CartSceneProps {}
 
@@ -30,6 +30,7 @@ const CartScene: React.FC<CartSceneProps> = () => {
               <Divider sx={{ my: 1 }} />
 
               {/* Order Summary */}
+              <OrderSummary />
 
               <Box sx={{ mt: 3 }}>
                 <Button color="secondary" className="circular-btn" fullWidth>
