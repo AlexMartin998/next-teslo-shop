@@ -17,10 +17,13 @@ interface ProductCardProps {
 
 interface PCState {
   isHovered: boolean;
+  isImgLoaded: boolean;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [isHovered, setIsHovered] = useState<PCState['isHovered']>(false);
+  const [isImageLoaded, setIsImageLoaded] =
+    useState<PCState['isImgLoaded']>(false);
 
   return (
     <Grid
@@ -42,13 +45,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               }
               alt={product.title}
               className="fadeIn"
-              // onLoad={() => console.log('loaded')}
+              
+              onLoad={() => setIsImageLoaded(true)}
             />
           </CardActionArea>
         </NextLink>
       </Card>
 
-      <Box sx={{ mt: 1 }} className="fadeIn">
+      <Box
+        sx={{ mt: 1, display: isImageLoaded ? 'block' : 'none' }}
+        className="fadeIn"
+      >
         <Typography fontWeight={700}>{product.title}</Typography>
         <Typography fontWeight={500}>${product.price}</Typography>
       </Box>
