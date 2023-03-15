@@ -1,4 +1,4 @@
 .navlink {
-  color: #3a64d8;
-  font-weight: bold;
+  color: #3a64d8 !important;
+  font-weight: bold !important;
 }

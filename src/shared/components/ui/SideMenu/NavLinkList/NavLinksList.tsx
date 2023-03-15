@@ -16,7 +16,7 @@ const NavLinksList: React.FC<NavLinksListProps> = ({ path, title, Icon }) => {
   const { toggleMenu } = useUi();
 
   return (
-    <NextLink href={path} onClick={toggleMenu}>
+    <NextLink href={path} onClick={toggleMenu} style={{ color: 'inherit' }}>
       <ListItem disablePadding>
         <ListItemButton>
           <ListItemIcon>

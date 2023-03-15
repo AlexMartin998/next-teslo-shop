@@ -1,4 +1,4 @@
-import { NextPage, GetServerSideProps } from 'next';
+import { NextPage, GetStaticPaths, GetStaticProps } from 'next';
 import { Box, Button, Grid, Typography } from '@mui/material';
 import 'react-slideshow-image/dist/styles.css';
 
@@ -71,6 +71,54 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
 
 
 */
+
+// You should use getStaticPaths if you’re statically pre-rendering pages that use dynamic routes
+export const getStaticPaths: GetStaticPaths = async ctx => {
+  const productSlugs = await dbProducts.getAllProductSlugs();
+
+  return {
+    paths: productSlugs.map(({ slug }) => ({
+      params: { slug }, // [slug].tsx
+    })),
+
+    // genera la page en runtime y la almacena en filesystem (new products after build time)
+    fallback: 'blocking', // ISG
+  };
+};
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const { slug } = params as { slug: string };
+  const product = await dbProducts.getProductBySlug(slug);
+
+  if (!product) {
+    return {
+      redirect: {
+        // if it don't exist, redirect to /
+        destination: '/',
+
+        // this page could be exist in the future and it would be indexed
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      product,
+    },
+
+    // ISR
+    revalidate: 86400, // c/24h - in seconds  (60*60*24)
+  };
+};
+
+export default ProductPage;
+
+/* 
+
+  * SSR:  getServerSideProps()   <--  No usar para productos, ya q queremos el comportamiento de Udemy. Tiene contenido Estatico q lo Revalida c/24h (alumnos, calificaciones, title) y q hace fetch en req time unicamente de la data q cambia constantemente como el price
+
+
 // You should use getServerSideProps when:
 // - Only if you need to pre-render a page whose data must be fetched at request time
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
@@ -93,4 +141,5 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   };
 };
 
-export default ProductPage;
+
+ */
