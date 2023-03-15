@@ -34,7 +34,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <Card>
-        <NextLink href={`/product/slug`} prefetch={false}>
+        <NextLink href={`/product/${product.slug}`} prefetch={false}>
           <CardActionArea>
             <CardMedia
               component="img"
@@ -45,7 +45,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               }
               alt={product.title}
               className="fadeIn"
-              
               onLoad={() => setIsImageLoaded(true)}
             />
           </CardActionArea>

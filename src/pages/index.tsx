@@ -12,7 +12,7 @@ export default function HomePage() {
       title="TesloShop - Spend less. Smile more."
       pageDescription="Find Teslo's best products here"
     >
-      <HomeScene products={products || []} isLoading={isLoading} />
+      <HomeScene products={products} isLoading={isLoading} />
     </ShopLayout>
   );
 }

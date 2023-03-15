@@ -1,16 +1,23 @@
-import { NextPage } from 'next';
+import { NextPage, GetServerSideProps } from 'next';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import 'react-slideshow-image/dist/styles.css';
 
 import { ShopLayout } from '@/layouts';
-
-import { initialData } from '@/api/db/seed';
-import { Box, Button, Chip, Grid, Typography } from '@mui/material';
+import { dbProducts } from '@/api/db';
 import { ProductSlidesShow, SizeSelector } from '@/teslo-shop/common';
 import { ItemCounter } from '@/shared/components';
+import { IProduct } from '@/interfaces';
 
-const product = initialData.products[0];
+interface ProductPageProps {
+  product: IProduct;
+}
 
-const ProductPage: NextPage = () => {
+const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
+  // // // Fetch de la data en Run Time / Req Time - Requiere 1 Loading - NO tiene SEO
+  // // Perdemos SEO xq al inicio NO tiene info de title, desc ni NADA, lo unico q verian seria el Loader
+  // const { query } = useRouter();
+  // const { products: product, isLoading } = useProducts(`/products/${query.slug}`);
+
   return (
     <ShopLayout title={product.title} pageDescription={product.description}>
       <Grid container spacing={3}>
@@ -56,6 +63,34 @@ const ProductPage: NextPage = () => {
       </Grid>
     </ShopLayout>
   );
+};
+
+/* 
+
+
+
+
+*/
+// You should use getServerSideProps when:
+// - Only if you need to pre-render a page whose data must be fetched at request time
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const { slug = '' } = params as { slug: string };
+  const product = await dbProducts.getProductBySlug(slug);
+  if (!product)
+    return {
+      redirect: {
+        destination: '/',
+
+        // page exist, allow indexing by google bots
+        permanent: false,
+      },
+    };
+
+  // TODO: meta tag de la imagen
+
+  return {
+    props: { product },
+  };
 };
 
 export default ProductPage;

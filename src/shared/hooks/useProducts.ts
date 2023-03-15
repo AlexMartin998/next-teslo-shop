@@ -13,7 +13,7 @@ export const useProducts = (url: string, config: SWRConfiguration = {}) => {
   );
 
   return {
-    products: data,
+    products: data || [],
     // isLoading: !error && !data,
     error,
     isLoading,
