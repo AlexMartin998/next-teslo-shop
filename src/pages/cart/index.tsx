@@ -1,5 +1,5 @@
 import { ShopLayout } from '@/layouts';
-import { CartScene } from '@/teslo-shop/scenes/CartScene';
+import { CartScene } from '@/teslo-shop';
 
 const CartPage = () => {
   return (

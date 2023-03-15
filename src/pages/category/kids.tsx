@@ -1,16 +1,25 @@
+import { Typography } from '@mui/material';
+
 import { ShopLayout } from '@/layouts';
 import { useProducts } from '@/shared/hooks';
-import { HomeScene } from '@/teslo-shop';
+import { ProductsScene } from '@/teslo-shop';
 
 const KidsCategoryPage = () => {
-  const { products, error, isLoading } = useProducts('/products?gender=kid');
+  const { products, isLoading } = useProducts('/products?gender=kid');
 
   return (
     <ShopLayout
       title="Children's product category"
       pageDescription="Find Teslo's best products here"
     >
-      <HomeScene products={products || []} isLoading={isLoading} />
+      <ProductsScene products={products} isLoading={isLoading}>
+        <Typography variant="h1" component="h1">
+          Children&apos;s section
+        </Typography>
+        <Typography variant="h2" sx={{ mb: 1 }}>
+          All our products for kids
+        </Typography>
+      </ProductsScene>
     </ShopLayout>
   );
 };

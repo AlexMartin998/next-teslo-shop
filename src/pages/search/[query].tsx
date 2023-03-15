@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 
 import { dbProducts } from '@/api/db';
 import { ShopLayout } from '@/layouts';
-import { HomeScene } from '@/teslo-shop';
+import { HomeScene, ProductsScene } from '@/teslo-shop';
 import { IProduct } from '@/interfaces';
 
 interface SearchPageProps {
@@ -22,24 +22,24 @@ const SearchPage: NextPage<SearchPageProps> = ({
       title="TesloShop - Spend less. Smile more."
       pageDescription="Find Teslo's best products here"
     >
-      <Typography variant="h1" component="h1">
-        Results
-      </Typography>
-
-      {productsFound ? (
-        <Typography variant="h2" sx={{ my: 1 }}>
-          All results for “{query}”
+      <ProductsScene products={products}>
+        <Typography variant="h1" component="h1">
+          Results
         </Typography>
-      ) : (
-        <Box>
-          <Typography variant="h2" fontWeight={600} my={2}>
-            Sorry, we couldn&apos;t find any results for{' '}
-            <q style={{ color: '#3A64D8', marginLeft: 3 }}>{query}</q>
-          </Typography>
-        </Box>
-      )}
 
-      <HomeScene products={products} />
+        {productsFound ? (
+          <Typography variant="h2" sx={{ my: 1 }}>
+            All results for “{query}”
+          </Typography>
+        ) : (
+          <Box>
+            <Typography variant="h2" fontWeight={600} my={2}>
+              Sorry, we couldn&apos;t find any results for{' '}
+              <q style={{ color: '#3A64D8', marginLeft: 3 }}>{query}</q>
+            </Typography>
+          </Box>
+        )}
+      </ProductsScene>
     </ShopLayout>
   );
 };
