@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Box,
   Divider,
@@ -12,13 +13,27 @@ import {
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
 import { useUi } from '@/context';
+import { useNavigateTo } from '@/shared/hooks';
 import { adminNavLinks, navLinks } from './navLinks';
 import NavLinksList from './NavLinkList/NavLinksList';
 
 export interface SideMenuProps {}
 
+interface SMState {
+  searchInput: string;
+}
+
 const SideMenu: React.FC<SideMenuProps> = () => {
   const { isMenuOpen, toggleMenu } = useUi();
+  const { navigateToPath } = useNavigateTo();
+  const [searchTerm, setSearchTerm] = useState<SMState['searchInput']>('');
+
+  const onSearchTerm = () => {
+    if (!searchTerm.trim().length) return;
+
+    navigateToPath(`/search/${searchTerm}`);
+    toggleMenu();
+  };
 
   return (
     <Drawer
@@ -35,11 +50,18 @@ const SideMenu: React.FC<SideMenuProps> = () => {
               placeholder="Buscar..."
               endAdornment={
                 <InputAdornment position="end">
-                  <IconButton aria-label="toggle password visibility">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={onSearchTerm}
+                  >
                     <SearchOutlinedIcon />
                   </IconButton>
                 </InputAdornment>
               }
+              //
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              onKeyUp={e => e.key === 'Enter' && onSearchTerm()}
             />
           </ListItem>
 

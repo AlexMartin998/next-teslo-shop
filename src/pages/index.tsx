@@ -5,8 +5,6 @@ import { HomeScene } from '@/teslo-shop';
 export default function HomePage() {
   const { products, error, isLoading } = useProducts('/products');
 
-  // console.log(data);
-
   return (
     <ShopLayout
       title="TesloShop - Spend less. Smile more."
