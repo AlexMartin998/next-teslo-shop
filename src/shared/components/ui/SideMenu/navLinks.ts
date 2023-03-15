@@ -31,17 +31,17 @@ export const navLinks: NavLinks[] = [
     Icon: ConfirmationNumberOutlinedIcon,
   },
   {
-    path: 'men',
+    path: '/category/men',
     title: 'men',
     Icon: MaleOutlinedIcon,
   },
   {
-    path: 'women',
+    path: '/category/women',
     title: 'women',
     Icon: FemaleOutlinedIcon,
   },
   {
-    path: 'kids',
+    path: '/category/kids',
     title: 'kids',
     Icon: EscalatorWarningOutlinedIcon,
   },

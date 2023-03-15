@@ -11,15 +11,19 @@ import {
 } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
+import { useUi } from '@/context';
 import { adminNavLinks, navLinks } from './navLinks';
 import NavLinksList from './NavLinkList/NavLinksList';
 
 export interface SideMenuProps {}
 
 const SideMenu: React.FC<SideMenuProps> = () => {
+  const { isMenuOpen, toggleMenu } = useUi();
+
   return (
     <Drawer
-      open={false}
+      open={isMenuOpen}
+      onClose={toggleMenu}
       anchor="right"
       sx={{ backdropFilter: 'blur(4px)', transition: 'all 0.5s ease-out' }}
     >

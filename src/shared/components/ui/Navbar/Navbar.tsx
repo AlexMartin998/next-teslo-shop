@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import {
   AppBar,
@@ -13,6 +12,8 @@ import {
 } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+
+import { useUi } from '@/context';
 import { navLinks } from './navLinks';
 import NavLink from './NavLink/NavLink';
 
@@ -20,6 +21,7 @@ export interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = () => {
   const isMobile = useMediaQuery('(max-width: 600px)');
+  const { toggleMenu } = useUi();
 
   return (
     <AppBar>
@@ -58,7 +60,7 @@ const Navbar: React.FC<NavbarProps> = () => {
           </Link>
         </NextLink>
 
-        <Button>Menu</Button>
+        <Button onClick={toggleMenu}>Menu</Button>
       </Toolbar>
     </AppBar>
   );
