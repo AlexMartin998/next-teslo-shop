@@ -40,8 +40,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               component="img"
               image={
                 isHovered
-                  ? `products/${product.images[1]}`
-                  : `products/${product.images[0]}`
+                  ? `/products/${product.images[1]}`
+                  : `/products/${product.images[0]}`
               }
               alt={product.title}
               className="fadeIn"
