@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import {
   AppBar,
@@ -12,6 +13,8 @@ import {
 } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import { navLinks } from './navLinks';
+import NavLink from './NavLink/NavLink';
 
 export interface NavbarProps {}
 
@@ -33,15 +36,9 @@ const Navbar: React.FC<NavbarProps> = () => {
         {/* <Box sx={{ display: { xs: 'none', sm: 'block' } }}> */}
         {!isMobile && (
           <Box>
-            <NextLink href="/category/men" passHref>
-              <Button>Men</Button>
-            </NextLink>
-            <NextLink href="/category/women" passHref>
-              <Button>Women</Button>
-            </NextLink>
-            <NextLink href="/category/kids" passHref>
-              <Button>Kids</Button>
-            </NextLink>
+            {navLinks.map(navLink => (
+              <NavLink key={navLink.path} {...navLink} />
+            ))}
           </Box>
         )}
 
