@@ -6,7 +6,7 @@ import { ProductList } from './components';
 interface HomeSceneProps {
   products: any;
   error?: any;
-  isLoading: boolean;
+  isLoading?: boolean;
 }
 
 const HomeScene: React.FC<HomeSceneProps> = ({ products, isLoading }) => {
