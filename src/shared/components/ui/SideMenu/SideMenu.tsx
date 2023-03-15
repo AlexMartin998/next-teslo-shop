@@ -46,6 +46,7 @@ const SideMenu: React.FC<SideMenuProps> = () => {
         <List>
           <ListItem>
             <Input
+              autoFocus
               type="text"
               placeholder="Buscar..."
               endAdornment={
