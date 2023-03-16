@@ -1,14 +1,36 @@
+import { useState } from 'react';
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 
 import { ProductSlidesShow, SizeSelector } from '@/teslo-shop/common';
 import { ItemCounter } from '@/shared/components';
-import { IProduct } from '@/interfaces';
+import { ICartProduct, IProduct, ISize } from '@/interfaces';
 
-export interface ProductSceneProps {
+interface ProductSceneProps {
   product: IProduct;
 }
 
+interface PSState {
+  productInCart: ICartProduct;
+}
+
 const ProductScene: React.FC<ProductSceneProps> = ({ product }) => {
+  const [tempCartProduct, setTempCartProduct] = useState<
+    PSState['productInCart']
+  >({
+    _id: product._id,
+    image: product.images[0],
+    price: product.price,
+    size: undefined,
+    slug: product.slug,
+    title: product.title,
+    gender: product.gender,
+    quantity: 1,
+  });
+
+  const handleSize = (size: ISize) => {
+    setTempCartProduct(prev => ({ ...prev, size }));
+  };
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} sm={7}>
@@ -32,8 +54,10 @@ const ProductScene: React.FC<ProductSceneProps> = ({ product }) => {
 
             <ItemCounter />
             <SizeSelector
-              // selectedSize={product.sizes[3]}
+              selectedSize={tempCartProduct.size}
               sizes={product.sizes}
+              // onSelectedSize={size => handleSize(size)}
+              onSelectedSize={handleSize}
             />
           </Box>
 
@@ -41,8 +65,12 @@ const ProductScene: React.FC<ProductSceneProps> = ({ product }) => {
           {!product.inStock ? (
             <Chip label="Out of Stock" color="error" variant="outlined" />
           ) : (
-            <Button color="secondary" className="circular-btn">
-              Add to cart
+            <Button
+              color="secondary"
+              className="circular-btn"
+              disabled={!tempCartProduct.size}
+            >
+              {tempCartProduct.size ? 'Add to cart' : 'Select a size'}
             </Button>
           )}
 
