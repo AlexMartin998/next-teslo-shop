@@ -7,6 +7,7 @@ import {
   CardMedia,
   Box,
   Typography,
+  Chip,
 } from '@mui/material';
 
 import { IProduct } from '@/interfaces';
@@ -41,6 +42,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <Card>
         <NextLink href={`/product/${product.slug}`} prefetch={false}>
           <CardActionArea>
+            {!product.inStock && (
+              <Chip
+                color="error"
+                label="Out of stock"
+                sx={{
+                  position: 'absolute',
+                  zIndex: 99,
+                  top: '10px',
+                  left: '10px',
+                }}
+              />
+            )}
+
             <CardMedia
               component="img"
               image={
