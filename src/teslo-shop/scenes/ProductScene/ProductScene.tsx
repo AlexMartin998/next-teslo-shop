@@ -31,6 +31,17 @@ const ProductScene: React.FC<ProductSceneProps> = ({ product }) => {
     setTempCartProduct(prev => ({ ...prev, size }));
   };
 
+  const handleUpdateQuantity = (updatedQuantity: number) => {
+    setTempCartProduct(currProd => ({
+      ...currProd,
+      quantity: updatedQuantity,
+    }));
+  };
+
+  const onAddProduct = () => {
+    console.log(tempCartProduct);
+  };
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} sm={7}>
@@ -52,7 +63,11 @@ const ProductScene: React.FC<ProductSceneProps> = ({ product }) => {
           <Box sx={{ my: 2 }}>
             <Typography variant="subtitle2">Quantity</Typography>
 
-            <ItemCounter />
+            <ItemCounter
+              currentValue={tempCartProduct.quantity}
+              maxValue={product.inStock > 10 ? 10 : product.inStock}
+              onUpdateQuantity={handleUpdateQuantity}
+            />
             <SizeSelector
               selectedSize={tempCartProduct.size}
               sizes={product.sizes}
@@ -69,6 +84,7 @@ const ProductScene: React.FC<ProductSceneProps> = ({ product }) => {
               color="secondary"
               className="circular-btn"
               disabled={!tempCartProduct.size}
+              onClick={onAddProduct}
             >
               {tempCartProduct.size ? 'Add to cart' : 'Select a size'}
             </Button>

@@ -27,7 +27,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     useState<PCState['isImgLoaded']>(false);
 
   const handleLoad = () => {
-    console.log(isImageLoaded);
     setIsImageLoaded(true);
   };
 
