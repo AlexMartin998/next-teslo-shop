@@ -1,11 +1,9 @@
-import { NextPage, GetStaticPaths, GetStaticProps } from 'next';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import 'react-slideshow-image/dist/styles.css';
 
-import { ShopLayout } from '@/layouts';
 import { dbProducts } from '@/api/db';
-import { ProductSlidesShow, SizeSelector } from '@/teslo-shop/common';
-import { ItemCounter } from '@/shared/components';
+import { ShopLayout } from '@/layouts';
+import { ProductScene } from '@/teslo-shop';
 import { IProduct } from '@/interfaces';
 
 interface ProductPageProps {
@@ -20,47 +18,7 @@ const ProductPage: NextPage<ProductPageProps> = ({ product }) => {
 
   return (
     <ShopLayout title={product.title} pageDescription={product.description}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={7}>
-          <ProductSlidesShow images={product.images} />
-        </Grid>
-
-        <Grid item xs={12} sm={5}>
-          <Box display="flex" flexDirection="column">
-            {/* titles */}
-            <Typography variant="h1" component="h1">
-              {product.title}
-            </Typography>
-            <Typography variant="subtitle1" component="h2">
-              ${product.price}
-            </Typography>
-
-            {/* Quantity: */}
-            <Box sx={{ my: 2 }}>
-              <Typography variant="subtitle2">Quantity</Typography>
-
-              <ItemCounter />
-              <SizeSelector
-                // selectedSize={product.sizes[3]}
-                sizes={product.sizes}
-              />
-            </Box>
-
-            {/* add to cart */}
-            <Button color="secondary" className="circular-btn">
-              Add to cart
-            </Button>
-
-            {/* <Chip label="Out of Stock" color="error" variant="outlined" /> */}
-
-            {/* Description: */}
-            <Box sx={{ mt: 3 }}>
-              <Typography variant="subtitle2">Description</Typography>
-              <Typography variant="body2">{product.description}</Typography>
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
+      <ProductScene product={product} />
     </ShopLayout>
   );
 };
