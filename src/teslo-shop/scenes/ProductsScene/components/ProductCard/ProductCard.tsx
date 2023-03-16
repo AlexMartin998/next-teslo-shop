@@ -25,6 +25,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [isImageLoaded, setIsImageLoaded] =
     useState<PCState['isImgLoaded']>(false);
 
+  const handleLoad = () => {
+    console.log(isImageLoaded);
+    setIsImageLoaded(true);
+  };
+
   return (
     <Grid
       item
@@ -45,7 +50,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               }
               alt={product.title}
               className="fadeIn"
-              onLoad={() => setIsImageLoaded(true)}
+              onLoad={handleLoad}
             />
           </CardActionArea>
         </NextLink>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import NextLink from 'next/link';
 import {
   AppBar,
@@ -17,10 +18,9 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 
 import { useUi } from '@/context';
+import { useNavigateTo } from '@/shared/hooks';
 import { navLinks } from './navLinks';
 import NavLink from './NavLink/NavLink';
-import { useState } from 'react';
-import { useNavigateTo } from '@/shared/hooks';
 
 export interface NavbarProps {}
 
@@ -92,7 +92,7 @@ const Navbar: React.FC<NavbarProps> = () => {
             ) : (
               <IconButton
                 onClick={() => setIsSearchVisible(true)}
-                className="fadeIn"
+                // className="fadeIn"
               >
                 <SearchOutlinedIcon />
               </IconButton>

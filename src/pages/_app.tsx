@@ -3,8 +3,8 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { SWRConfig } from 'swr';
 
 import { lightTheme } from '@/themes';
+import { CartProvider, UIProvider } from '@/context';
 import '@/styles/globals.css';
-import { UIProvider } from '@/context';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -15,13 +15,15 @@ export default function App({ Component, pageProps }: AppProps) {
           fetch(resource, init).then(res => res.json()),
       }}
     >
-      <UIProvider>
-        <ThemeProvider theme={lightTheme}>
-          <CssBaseline />
+      <CartProvider>
+        <UIProvider>
+          <ThemeProvider theme={lightTheme}>
+            <CssBaseline />
 
-          <Component {...pageProps} />
-        </ThemeProvider>
-      </UIProvider>
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </UIProvider>
+      </CartProvider>
     </SWRConfig>
   );
 }

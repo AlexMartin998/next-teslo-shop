@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 
 import { dbProducts } from '@/api/db';
 import { ShopLayout } from '@/layouts';
-import { HomeScene, ProductsScene } from '@/teslo-shop';
+import { ProductsScene } from '@/teslo-shop';
 import { IProduct } from '@/interfaces';
 
 interface SearchPageProps {
