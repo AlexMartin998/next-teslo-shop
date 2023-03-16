@@ -4,6 +4,8 @@ import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { ProductSlidesShow, SizeSelector } from '@/teslo-shop/common';
 import { ItemCounter } from '@/shared/components';
 import { ICartProduct, IProduct, ISize } from '@/interfaces';
+import { useNavigateTo } from '@/shared/hooks';
+import { useCart } from '@/context';
 
 interface ProductSceneProps {
   product: IProduct;
@@ -14,6 +16,8 @@ interface PSState {
 }
 
 const ProductScene: React.FC<ProductSceneProps> = ({ product }) => {
+  const { navigateToPath } = useNavigateTo();
+  const { addProductToCart } = useCart();
   const [tempCartProduct, setTempCartProduct] = useState<
     PSState['productInCart']
   >({
@@ -39,7 +43,11 @@ const ProductScene: React.FC<ProductSceneProps> = ({ product }) => {
   };
 
   const onAddProduct = () => {
-    console.log(tempCartProduct);
+    if (!tempCartProduct.size) return;
+
+    // evitar q se pase x referencia y cambie el tempCartProduct.quantity al llevar el mismo producto con misma talla sin modificar nada y sin aplicar de inmediato la redireccion. (1,2,4,8,16,32 etc.)
+    addProductToCart({ ...tempCartProduct });
+    // navigateToPath('/cart');
   };
 
   return (
