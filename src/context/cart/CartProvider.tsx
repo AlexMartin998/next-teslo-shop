@@ -2,7 +2,7 @@ import { useEffect, useReducer, useState } from 'react';
 import Cookies from 'js-cookie';
 
 import { CartActionType, CartContext, cartReducer } from './';
-import { ICartProduct } from '@/interfaces';
+import { ICartProduct, IProduct } from '@/interfaces';
 
 export interface CartState {
   cart: ICartProduct[];
@@ -19,9 +19,8 @@ const CART_INIT_STATE: CartState = {
 export const CartProvider = ({ children }: CartProviderProps) => {
   const [state, dispatch] = useReducer(cartReducer, CART_INIT_STATE);
 
+  // // "isMounted" ensures that the status will NOT be Updated if the initialization has not yet been executed
   const [isMounted, setIsMounted] = useState(false);
-
-  // "isMounted" ensures that the status will NOT be Updated if the initialization has not yet been executed
   useEffect(() => {
     try {
       if (!isMounted) {
@@ -48,6 +47,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   useEffect(() => {
     if (isMounted) Cookies.set('cart', JSON.stringify(state.cart));
   }, [state.cart, isMounted]);
+  // // end - load cart from cookies
 
   const addProductToCart = (productToAdd: ICartProduct) => {
     const updatedProductCart = [...state.cart];
@@ -64,6 +64,14 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     });
   };
 
+  const updateCartQuantity = (product: ICartProduct) => {
+    dispatch({ type: CartActionType.updateCartQuantity, payload: product });
+  };
+
+  const removeProductFromCart = (product: ICartProduct) => {
+    dispatch({ type: CartActionType.removeProductoFromCart, payload: product });
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -71,6 +79,8 @@ export const CartProvider = ({ children }: CartProviderProps) => {
 
         // methods
         addProductToCart,
+        updateCartQuantity,
+        removeProductFromCart,
       }}
     >
       {children}
