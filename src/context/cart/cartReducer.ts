@@ -2,7 +2,10 @@ import { CartState } from './';
 import { ICartProduct } from '@/interfaces';
 
 type CartAction =
-  | { type: CartActionType.loadCartFromCookiesOrStorage }
+  | {
+      type: CartActionType.loadCartFromCookiesOrStorage;
+      payload: ICartProduct[];
+    }
   | { type: CartActionType.updateProductsInCart; payload: ICartProduct[] };
 
 export enum CartActionType {
@@ -16,7 +19,7 @@ export const cartReducer = (
 ): CartState => {
   switch (action.type) {
     case CartActionType.loadCartFromCookiesOrStorage:
-      return { ...state };
+      return { ...state, cart: [...action.payload] };
 
     case CartActionType.updateProductsInCart:
       return { ...state, cart: action.payload };
