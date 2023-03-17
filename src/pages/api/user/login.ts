@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcrypt';
 
 import { db, User } from '@/api/db';
+import { signToken } from '@/shared/utils';
 import { ValidRoles } from '@/interfaces';
 
 type HandlreData = { message: string } | { token: string; user: LoginResponse };
@@ -41,7 +42,8 @@ const login = async (
         'There was a problem logging in. Check your email and password or create an account.',
     });
 
-  const { name, role } = user;
+  const { name, role, _id } = user;
+  const token = signToken(_id);
 
-  return res.status(200).json({ token: '', user: { name, email, role } });
+  return res.status(200).json({ token, user: { name, email, role } });
 };
