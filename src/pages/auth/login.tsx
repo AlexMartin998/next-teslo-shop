@@ -1,15 +1,15 @@
+import { useState } from 'react';
 import { NextPage } from 'next';
 import NextLink from 'next/link';
 import { Box, Button, Chip, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
+import { isAxiosError } from 'axios';
 
 import { AuthLayout } from '@/layouts';
 import { loginFormSchema } from '@/shared/utils';
 import { tesloApi } from '@/api/axios-client';
-import { isAxiosError } from 'axios';
-import { useState } from 'react';
 
 type FormData = {
   email: string;
