@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { db, ProductModel, seedData } from '@/api/db';
+import { db, ProductModel, seedData, User } from '@/api/db';
 
 type Data = {
   message: string;
@@ -15,6 +15,9 @@ export default async function handler(
     return res.status(401).json({ message: 'Cannot run SEED in Production' });
 
   await db.connect();
+
+  await User.deleteMany();
+  await User.insertMany(seedData.initialData.users);
 
   await ProductModel.deleteMany();
   await ProductModel.insertMany(seedData.initialData.products);
