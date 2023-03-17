@@ -10,7 +10,7 @@ export interface IUser {
   updatedAt?: string;
 }
 
-enum ValidRoles {
+export enum ValidRoles {
   admin = 'admin',
   client = 'client',
 }
