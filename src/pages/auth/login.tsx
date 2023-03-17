@@ -5,11 +5,11 @@ import { Box, Button, Chip, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
-import { isAxiosError } from 'axios';
 
 import { AuthLayout } from '@/layouts';
 import { loginFormSchema } from '@/shared/utils';
-import { tesloApi } from '@/api/axios-client';
+import { useAuth } from '@/context';
+import { useNavigateTo } from '@/shared/hooks';
 
 type FormData = {
   email: string;
@@ -17,30 +17,28 @@ type FormData = {
 };
 
 const LoginPage: NextPage = () => {
+  const { login } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({ resolver: yupResolver(loginFormSchema) });
   const [showError, setShowError] = useState(false);
+  const { navigateAndReplace } = useNavigateTo();
 
   const onLogin = async ({ email, password }: FormData) => {
     setShowError(false);
 
-    try {
-      const {
-        data: { token, user },
-      } = await tesloApi.post('/user/login', { email, password });
-      console.log(token, user);
-    } catch (error) {
-      if (isAxiosError(error)) {
-        console.log(error.response?.data);
-      }
-      setShowError(true);
+    const isValidLogin = await login(email, password);
+    if (!isValidLogin) {
       setTimeout(() => {
         setShowError(false);
       }, 2100);
+
+      return setShowError(true);
     }
+
+    navigateAndReplace('/');
   };
 
   return (

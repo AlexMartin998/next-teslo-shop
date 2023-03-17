@@ -2,12 +2,12 @@ import { AuthState } from './';
 import { IUser } from '@/interfaces';
 
 type AuthAction =
-  | { type: AuthActionType.onLogin; payload: IUser }
-  | { type: AuthActionType.onLogout };
+  | { type: AuthActionType.login; payload: IUser }
+  | { type: AuthActionType.logout };
 
 export enum AuthActionType {
-  onLogin = '[Auth] - Log In',
-  onLogout = '[Auth] - Log Out',
+  login = '[Auth] - Log In',
+  logout = '[Auth] - Log Out',
 }
 
 export const authReducer = (
@@ -15,10 +15,10 @@ export const authReducer = (
   action: AuthAction
 ): AuthState => {
   switch (action.type) {
-    case AuthActionType.onLogin:
+    case AuthActionType.login:
       return { ...state, isLoggedIn: true, user: action.payload };
 
-    case AuthActionType.onLogout:
+    case AuthActionType.logout:
       return { ...state, isLoggedIn: false, user: undefined };
 
     default:
