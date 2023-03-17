@@ -34,12 +34,21 @@ export const cartReducer = (
       return {
         ...state,
 
-        cart: state.cart.map(product => {
-          if (product._id !== action.payload._id) return product;
-          if (product.size !== action.payload.size) return product;
+        // // true -> return the original product
+        // cart: state.cart.map(product =>
+        //   product._id !== action.payload._id ||
+        //   product.size !== action.payload.size
+        //     ? product
+        //     : action.payload
+        // ),
 
-          return action.payload;
-        }),
+        // // true -> return updated product
+        cart: state.cart.map(product =>
+          product._id === action.payload._id &&
+          product.size === action.payload.size
+            ? action.payload
+            : product
+        ),
       };
 
     case CartActionType.removeProductoFromCart:
