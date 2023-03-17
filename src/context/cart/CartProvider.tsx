@@ -2,7 +2,8 @@ import { useEffect, useReducer, useState } from 'react';
 import Cookies from 'js-cookie';
 
 import { CartActionType, CartContext, cartReducer } from './';
-import { ICartProduct, IProduct } from '@/interfaces';
+import { ICartProduct } from '@/interfaces';
+import { TesloConstantKey, tesloConstants } from '@/shared/constants';
 
 export interface CartState {
   cart: ICartProduct[];
@@ -48,6 +49,30 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     if (isMounted) Cookies.set('cart', JSON.stringify(state.cart));
   }, [state.cart, isMounted]);
   // // end - load cart from cookies
+
+  // // orderSummary
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const subTotal = state.cart.reduce(
+      (acc, { price, quantity }) => acc + price * quantity,
+      0
+    );
+    const taxRate = tesloConstants.get(TesloConstantKey.taxtRate) || 0.12;
+    const tax = subTotal * taxRate;
+
+    const orderSummary = {
+      numberOfItems: state.cart.reduce(
+        (acc, itemInCart) => acc + itemInCart.quantity,
+        0
+      ),
+      subTotal,
+      tax,
+      total: subTotal + tax,
+    };
+
+    console.log(orderSummary);
+  }, [isMounted, state.cart]);
 
   const addProductToCart = (productToAdd: ICartProduct) => {
     const updatedProductCart = [...state.cart];
