@@ -14,5 +14,5 @@ export const loginFormSchema = yup.object({
     .string()
     .required('Password is requiered')
     .min(2, 'Min 2 characteres')
-    .max(12, 'Max 12 characteres'),
+    .max(33, 'Max 12 characteres'),
 });

@@ -1,13 +1,15 @@
 import { NextPage } from 'next';
 import NextLink from 'next/link';
-import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import { Box, Button, Chip, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 import { AuthLayout } from '@/layouts';
 import { loginFormSchema } from '@/shared/utils';
 import { tesloApi } from '@/api/axios-client';
-import { AxiosError, isAxiosError } from 'axios';
+import { isAxiosError } from 'axios';
+import { useState } from 'react';
 
 type FormData = {
   email: string;
@@ -20,8 +22,11 @@ const LoginPage: NextPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({ resolver: yupResolver(loginFormSchema) });
+  const [showError, setShowError] = useState(false);
 
   const onLogin = async ({ email, password }: FormData) => {
+    setShowError(false);
+
     try {
       const {
         data: { token, user },
@@ -31,6 +36,10 @@ const LoginPage: NextPage = () => {
       if (isAxiosError(error)) {
         console.log(error.response?.data);
       }
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 2100);
     }
   };
 
@@ -40,9 +49,19 @@ const LoginPage: NextPage = () => {
         <Box sx={{ width: 350, padding: '10px 20px' }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="h1" component="h1">
-                Log In
-              </Typography>
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="h1" component="h1">
+                  Log In
+                </Typography>
+
+                <Chip
+                  label="Invalid credentials"
+                  color="error"
+                  icon={<ErrorOutlineOutlinedIcon />}
+                  className="fadeIn"
+                  sx={{ display: showError ? 'flex' : 'none' }}
+                />
+              </Box>
             </Grid>
 
             <Grid item xs={12}>
