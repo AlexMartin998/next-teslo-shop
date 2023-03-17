@@ -6,6 +6,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { AuthLayout } from '@/layouts';
 import { loginFormSchema } from '@/shared/utils';
+import { tesloApi } from '@/api/axios-client';
+import { AxiosError, isAxiosError } from 'axios';
 
 type FormData = {
   email: string;
@@ -19,8 +21,17 @@ const LoginPage: NextPage = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: yupResolver(loginFormSchema) });
 
-  const onLogin = (data: FormData) => {
-    console.log(data);
+  const onLogin = async ({ email, password }: FormData) => {
+    try {
+      const {
+        data: { token, user },
+      } = await tesloApi.post('/user/login', { email, password });
+      console.log(token, user);
+    } catch (error) {
+      if (isAxiosError(error)) {
+        console.log(error.response?.data);
+      }
+    }
   };
 
   return (

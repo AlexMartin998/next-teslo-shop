@@ -47,7 +47,7 @@ const validateJWT = async (
       user: { name, email, role },
     });
   } catch (error) {
-    return res.status(500).json({ message: 'Something went wrong!' });
+    return res.status(500).json({ message: 'Invalid token!' });
   } finally {
     db.disconnect();
   }
