@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcrypt';
 
 import { db, User } from '@/api/db';
-import { signToken } from '@/shared/utils';
+import { signToken, validations } from '@/shared/utils';
 import { ValidRoles } from '@/interfaces';
 
 type HandlreData =
@@ -33,6 +33,8 @@ const register = async (
   res: NextApiResponse<HandlreData>
 ) => {
   const { email, password, name } = req.body;
+  if (!validations.isValidEmail(email))
+    return res.status(400).json({ message: 'Invalid email!' });
 
   await db.connect();
   const user = await User.findOne({ email });
@@ -44,14 +46,17 @@ const register = async (
     });
   }
 
-  const newUser = new User({ email, password, name });
-  
-  
-  newUser.save();
-  await db.disconnect();
+  try {
+    const newUser = new User({ email, password, name, role: 'client' });
+    await newUser.save();
 
-  const { role, _id } = newUser;
-  const token = signToken(_id);
+    const { role, _id } = newUser;
+    const token = signToken(_id);
 
-  return res.status(200).json({ token, user: { name, email, role } });
+    return res.status(200).json({ token, user: { name, email, role } });
+  } catch (error) {
+    return res.status(500).json({ message: 'Something went wrong!' });
+  } finally {
+    await db.disconnect();
+  }
 };
