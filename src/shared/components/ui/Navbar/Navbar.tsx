@@ -17,7 +17,7 @@ import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 
-import { useUi } from '@/context';
+import { useCart, useUi } from '@/context';
 import { useNavigateTo } from '@/shared/hooks';
 import { navLinks } from './navLinks';
 import NavLink from './NavLink/NavLink';
@@ -27,6 +27,9 @@ export interface NavbarProps {}
 const Navbar: React.FC<NavbarProps> = () => {
   const isMobile = useMediaQuery('(max-width: 600px)');
   const { toggleMenu } = useUi();
+  const {
+    orderSummary: { numberOfItems },
+  } = useCart();
   const { navigateToPath } = useNavigateTo();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -110,7 +113,7 @@ const Navbar: React.FC<NavbarProps> = () => {
         <NextLink href="/cart">
           <Link component="span">
             <IconButton>
-              <Badge badgeContent={3} color="secondary">
+              <Badge badgeContent={numberOfItems} max={9} color="secondary">
                 <ShoppingCartOutlinedIcon />
               </Badge>
             </IconButton>

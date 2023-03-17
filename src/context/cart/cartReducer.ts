@@ -1,5 +1,5 @@
 import { CartState } from './';
-import { ICartProduct } from '@/interfaces';
+import { ICartProduct, IOrderSummary } from '@/interfaces';
 
 type CartAction =
   | {
@@ -8,13 +8,15 @@ type CartAction =
     }
   | { type: CartActionType.updateProductsInCart; payload: ICartProduct[] }
   | { type: CartActionType.updateCartQuantity; payload: ICartProduct }
-  | { type: CartActionType.removeProductoFromCart; payload: ICartProduct };
+  | { type: CartActionType.removeProductoFromCart; payload: ICartProduct }
+  | { type: CartActionType.updateOrderSummary; payload: IOrderSummary };
 
 export enum CartActionType {
   loadCartFromCookiesOrStorage = '[Cart] - Load cart from cookies | storage',
   updateProductsInCart = '[Cart] - Update products in cart',
   updateCartQuantity = '[Cart] - Update product quantity in cart',
   removeProductoFromCart = '[Cart] - Remove product from cart',
+  updateOrderSummary = '[Cart] - Update order summary',
 }
 
 export const cartReducer = (
@@ -48,6 +50,9 @@ export const cartReducer = (
           p => !(p._id === action.payload._id && p.size === action.payload.size)
         ),
       };
+
+    case CartActionType.updateOrderSummary:
+      return { ...state, orderSummary: { ...action.payload } };
 
     default:
       return state;

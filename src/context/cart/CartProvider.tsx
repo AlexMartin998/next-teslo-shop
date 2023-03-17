@@ -2,11 +2,12 @@ import { useEffect, useReducer, useState } from 'react';
 import Cookies from 'js-cookie';
 
 import { CartActionType, CartContext, cartReducer } from './';
-import { ICartProduct } from '@/interfaces';
+import { ICartProduct, IOrderSummary } from '@/interfaces';
 import { TesloConstantKey, tesloConstants } from '@/shared/constants';
 
 export interface CartState {
   cart: ICartProduct[];
+  orderSummary: IOrderSummary;
 }
 
 interface CartProviderProps {
@@ -15,6 +16,12 @@ interface CartProviderProps {
 
 const CART_INIT_STATE: CartState = {
   cart: [],
+  orderSummary: {
+    numberOfItems: 0,
+    subTotal: 0,
+    tax: 0,
+    total: 0,
+  },
 };
 
 export const CartProvider = ({ children }: CartProviderProps) => {
@@ -61,7 +68,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     const taxRate = tesloConstants.get(TesloConstantKey.taxtRate) || 0.12;
     const tax = subTotal * taxRate;
 
-    const orderSummary = {
+    const orderSummary: IOrderSummary = {
       numberOfItems: state.cart.reduce(
         (acc, itemInCart) => acc + itemInCart.quantity,
         0
@@ -71,7 +78,10 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       total: subTotal + tax,
     };
 
-    console.log(orderSummary);
+    dispatch({
+      type: CartActionType.updateOrderSummary,
+      payload: orderSummary,
+    });
   }, [isMounted, state.cart]);
 
   const addProductToCart = (productToAdd: ICartProduct) => {
