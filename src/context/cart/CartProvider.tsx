@@ -2,8 +2,8 @@ import { useEffect, useReducer, useState } from 'react';
 import Cookies from 'js-cookie';
 
 import { CartActionType, CartContext, cartReducer } from './';
-import { ICartProduct, IOrderSummary } from '@/interfaces';
 import { TesloConstantKey, tesloConstants } from '@/shared/constants';
+import { ICartProduct, IOrderSummary } from '@/interfaces';
 
 export interface CartState {
   cart: ICartProduct[];
