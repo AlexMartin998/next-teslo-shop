@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@hookform/resolvers": "^2.9.11",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.12",
     "@mui/x-data-grid": "^6.0.1",
@@ -21,9 +22,11 @@
     "next": "13.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.43.6",
     "react-slideshow-image": "^4.2.1",
     "sharp": "^0.31.3",
-    "swr": "^2.1.0"
+    "swr": "^2.1.0",
+    "yup": "^1.0.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
