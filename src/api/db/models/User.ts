@@ -26,10 +26,10 @@ const UserSchema = new Schema(
       type: String,
       required: [true, 'Password is required!'],
       trim: true,
-      maxlength: [30, 'A password must have less or equal than 30 characters'],
+      // maxlength: [30, 'A password must have less or equal than 30 characters'],  // seed errors
       minlength: [5, 'A password must have less or equal than 5 characters'],
 
-      select: false,
+      // select: false,
     },
 
     // doc
@@ -51,8 +51,7 @@ UserSchema.pre('save', async function (next) {
   // If the pass is already hashed, it don't re-hashet it
   if (!this.isModified('password')) return next();
 
-  const hash = await bcrypt.hash(this.password, 10);
-  this.password = hash;
+  this.password = await bcrypt.hash(this.password, 10);
 
   next();
 });

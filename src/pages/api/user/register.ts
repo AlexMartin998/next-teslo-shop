@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import bcrypt from 'bcrypt';
 
 import { db, User } from '@/api/db';
 import { signToken, validations } from '@/shared/utils';
