@@ -36,7 +36,12 @@ const CartScene: React.FC<CartSceneProps> = () => {
 
               <Box sx={{ mt: 3 }}>
                 <NextLink href="/checkout/address" prefetch={false}>
-                  <Button color="secondary" className="circular-btn" fullWidth>
+                  <Button
+                    color="secondary"
+                    className="circular-btn"
+                    fullWidth
+                    // href="/checkout/address"
+                  >
                     Checkout
                   </Button>
                 </NextLink>
