@@ -1,10 +1,10 @@
-import { useReducer } from 'react';
+import { useReducer, useEffect } from 'react';
 import Cookies from 'js-cookie';
+import { isAxiosError } from 'axios';
 
 import { AuthActionType, AuthContext, authReducer } from './';
 import { tesloApi } from '@/api/axios-client';
 import { IUser } from '@/interfaces';
-import { isAxiosError } from 'axios';
 import { RegisterReturn } from '../';
 
 export interface AuthState {
@@ -74,6 +74,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       };
     }
   };
+
+  const checkAuthToken = async () => {
+    try {
+      const {
+        data: { token, user },
+      } = await tesloApi.get('/user/validate-token');
+
+      Cookies.set('token', token);
+      dispatch({ type: AuthActionType.login, payload: user });
+    } catch (error) {
+      Cookies.remove('token');
+      dispatch({ type: AuthActionType.logout });
+    }
+  };
+
+  useEffect(() => {
+    checkAuthToken();
+  }, []);
 
   return (
     <AuthContext.Provider
