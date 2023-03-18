@@ -4,6 +4,8 @@ import Cookies from 'js-cookie';
 import { AuthActionType, AuthContext, authReducer } from './';
 import { tesloApi } from '@/api/axios-client';
 import { IUser } from '@/interfaces';
+import { isAxiosError } from 'axios';
+import { RegisterReturn } from '../';
 
 export interface AuthState {
   isLoggedIn: boolean;
@@ -33,9 +35,43 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       return true;
     } catch (error) {
-      //
+      // todo: set err msg in [ui]
       dispatch({ type: AuthActionType.logout });
       return false;
+    }
+  };
+
+  const registerUser = async (
+    name: string,
+    email: string,
+    password: string
+  ): Promise<RegisterReturn> => {
+    try {
+      const {
+        data: { token, user },
+      } = await tesloApi.post('/user/register', { name, email, password });
+
+      Cookies.set('token', token);
+      dispatch({ type: AuthActionType.login, payload: user });
+
+      return {
+        hasError: false,
+      };
+    } catch (error) {
+      dispatch({ type: AuthActionType.logout });
+
+      if (isAxiosError(error)) {
+        return {
+          hasError: true,
+          message: error.response?.data.message,
+        };
+      }
+
+      return {
+        hasError: true,
+        message:
+          'It has not been possible to register the user, please try again',
+      };
     }
   };
 
@@ -46,6 +82,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
         // methods
         login,
+        registerUser,
       }}
     >
       {children}

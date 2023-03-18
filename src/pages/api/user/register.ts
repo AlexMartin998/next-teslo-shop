@@ -44,16 +44,17 @@ const register = async (
       message: 'Email already registered!',
     });
   }
-
+  console.log({ email, password, name });
   try {
     const newUser = new User({ email, password, name, role: 'client' });
     await newUser.save();
-
+    console.log(newUser)
     const { role, _id } = newUser;
     const token = signToken(_id);
 
     return res.status(200).json({ token, user: { name, email, role } });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: 'Something went wrong!' });
   } finally {
     await db.disconnect();

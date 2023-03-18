@@ -4,10 +4,10 @@ import { Box, Button, Chip, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
-import { isAxiosError } from 'axios';
 
 import { AuthLayout } from '@/layouts';
-import { tesloApi } from '@/api/axios-client';
+import { useAuth } from '@/context';
+import { useNavigateTo } from '@/shared/hooks';
 import { registerFormSchema } from '@/shared/utils';
 
 type FormData = {
@@ -17,6 +17,8 @@ type FormData = {
 };
 
 const RegisterPage = () => {
+  const { registerUser } = useAuth();
+  const { navigateAndReplace } = useNavigateTo();
   const [showError, setShowError] = useState(false);
   const [errMsg, setErrMsg] = useState('');
   const {
@@ -26,26 +28,22 @@ const RegisterPage = () => {
     reset,
   } = useForm<FormData>({ resolver: yupResolver(registerFormSchema) });
 
-  const onRegister = async (data: FormData) => {
+  const onRegister = async ({ email, name, password }: FormData) => {
     setShowError(false);
+    const { hasError, message } = await registerUser(name, email, password);
 
-    try {
-      const {
-        data: { token, user },
-      } = await tesloApi.post('/user/register', data);
-      console.log(token, user);
-    } catch (error) {
-      if (isAxiosError(error)) {
-        console.log(error.response);
-        setErrMsg(error.response?.data?.message);
-        setShowError(true);
-        setTimeout(() => {
-          setShowError(false);
-          setErrMsg('');
-        }, 2400);
-      }
-      reset();
+    if (hasError) {
+      setErrMsg(message ?? '');
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+        setErrMsg('');
+      }, 2400);
+
+      return reset();
     }
+
+    navigateAndReplace('/');
   };
 
   return (
