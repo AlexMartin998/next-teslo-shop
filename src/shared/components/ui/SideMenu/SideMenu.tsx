@@ -9,12 +9,18 @@ import {
   List,
   ListItem,
   ListSubheader,
+  useMediaQuery,
 } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 
-import { useUi } from '@/context';
+import { useAuth, useUi } from '@/context';
 import { useNavigateTo } from '@/shared/hooks';
-import { adminNavLinks, navLinks } from './navLinks';
+import {
+  adminNavLinks,
+  categoriesNavLinks,
+  authNavLinks,
+  privateNavLinks,
+} from './navLinks';
 import NavLinksList from './NavLinkList/NavLinksList';
 
 export interface SideMenuProps {}
@@ -25,8 +31,10 @@ interface SMState {
 
 const SideMenu: React.FC<SideMenuProps> = () => {
   const { isMenuOpen, toggleMenu } = useUi();
+  const { user, isLoggedIn } = useAuth();
   const { navigateToPath } = useNavigateTo();
   const [searchTerm, setSearchTerm] = useState<SMState['searchInput']>('');
+  const isMobile = useMediaQuery('(max-width: 600px)');
 
   const onSearchTerm = () => {
     if (!searchTerm.trim().length) return;
@@ -66,17 +74,38 @@ const SideMenu: React.FC<SideMenuProps> = () => {
             />
           </ListItem>
 
+          {/* Private */}
+          {isLoggedIn &&
+            privateNavLinks.map(navLink => (
+              <NavLinksList key={navLink.path} {...navLink} />
+            ))}
+
           {/* Public */}
-          {navLinks.map(navLink => (
-            <NavLinksList key={navLink.path} {...navLink} />
-          ))}
+          {isMobile &&
+            categoriesNavLinks.map(navLink => (
+              <NavLinksList key={navLink.path} {...navLink} />
+            ))}
+
+          {authNavLinks.map(navLink => {
+            if (
+              (isLoggedIn && navLink.path === '/auth/login') ||
+              (!isLoggedIn && navLink.path === '/logout')
+            )
+              return;
+
+            return <NavLinksList key={navLink.path} {...navLink} />;
+          })}
 
           {/* Admin */}
-          <Divider />
-          <ListSubheader>Admin Panel</ListSubheader>
-          {adminNavLinks.map(navLink => (
-            <NavLinksList key={navLink.path} {...navLink} />
-          ))}
+          {isLoggedIn && user?.role === 'admin' && (
+            <>
+              <Divider />
+              <ListSubheader>Admin Panel</ListSubheader>
+              {adminNavLinks.map(navLink => (
+                <NavLinksList key={navLink.path} {...navLink} />
+              ))}
+            </>
+          )}
         </List>
       </Box>
     </Drawer>

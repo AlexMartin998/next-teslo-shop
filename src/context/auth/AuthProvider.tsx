@@ -76,6 +76,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const checkAuthToken = async () => {
+    if (!Cookies.get('token')) return dispatch({ type: AuthActionType.logout });
+
     try {
       const {
         data: { token, user },

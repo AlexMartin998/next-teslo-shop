@@ -19,17 +19,20 @@ export interface NavLinks {
 
 type NavLinksId = 'home' | 'features' | 'product' | 'clients' | '/';
 
-export const navLinks: NavLinks[] = [
+export const authNavLinks: NavLinks[] = [
   {
-    path: '/profile',
-    title: 'profile',
-    Icon: AccountCircleOutlinedIcon,
+    path: '/auth/login',
+    title: 'log In',
+    Icon: VpnKeyOutlinedIcon,
   },
   {
-    path: '/my-purchase-orders',
-    title: 'My purchase orders',
-    Icon: ConfirmationNumberOutlinedIcon,
+    path: '/logout',
+    title: 'log Out',
+    Icon: LoginOutlinedIcon,
   },
+];
+
+export const categoriesNavLinks = [
   {
     path: '/category/men',
     title: 'men',
@@ -45,31 +48,34 @@ export const navLinks: NavLinks[] = [
     title: 'kids',
     Icon: EscalatorWarningOutlinedIcon,
   },
+];
+
+export const privateNavLinks = [
   {
-    path: 'login',
-    title: 'log In',
-    Icon: VpnKeyOutlinedIcon,
+    path: '/profile',
+    title: 'profile',
+    Icon: AccountCircleOutlinedIcon,
   },
   {
-    path: 'logout',
-    title: 'log Out',
-    Icon: LoginOutlinedIcon,
+    path: '/my-purchase-orders',
+    title: 'My purchase orders',
+    Icon: ConfirmationNumberOutlinedIcon,
   },
 ];
 
 export const adminNavLinks: NavLinks[] = [
   {
-    path: 'products',
+    path: '/products',
     title: 'products',
     Icon: CategoryOutlinedIcon,
   },
   {
-    path: 'orders',
+    path: '/orders',
     title: 'Purchase orders',
     Icon: ConfirmationNumberOutlinedIcon,
   },
   {
-    path: 'users',
+    path: '/users',
     title: 'users',
     Icon: AdminPanelSettingsOutlinedIcon,
   },
