@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {
   Box,
+  capitalize,
   Divider,
   Drawer,
   IconButton,
@@ -8,19 +9,19 @@ import {
   InputAdornment,
   List,
   ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   ListSubheader,
   useMediaQuery,
 } from '@mui/material';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
+import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
 
 import { useAuth, useUi } from '@/context';
 import { useNavigateTo } from '@/shared/hooks';
-import {
-  adminNavLinks,
-  categoriesNavLinks,
-  authNavLinks,
-  privateNavLinks,
-} from './navLinks';
+import { adminNavLinks, categoriesNavLinks, privateNavLinks } from './navLinks';
 import NavLinksList from './NavLinkList/NavLinksList';
 
 export interface SideMenuProps {}
@@ -31,7 +32,7 @@ interface SMState {
 
 const SideMenu: React.FC<SideMenuProps> = () => {
   const { isMenuOpen, toggleMenu } = useUi();
-  const { user, isLoggedIn } = useAuth();
+  const { user, isLoggedIn, logOut } = useAuth();
   const { navigateToPath } = useNavigateTo();
   const [searchTerm, setSearchTerm] = useState<SMState['searchInput']>('');
   const isMobile = useMediaQuery('(max-width: 600px)');
@@ -86,15 +87,25 @@ const SideMenu: React.FC<SideMenuProps> = () => {
               <NavLinksList key={navLink.path} {...navLink} />
             ))}
 
-          {authNavLinks.map(navLink => {
-            if (
-              (isLoggedIn && navLink.path === '/auth/login') ||
-              (!isLoggedIn && navLink.path === '/logout')
-            )
-              return;
+          {!isLoggedIn && (
+            <NavLinksList
+              key={'/auth/login'}
+              path="/auth/login"
+              Icon={VpnKeyOutlinedIcon}
+              title="login"
+            />
+          )}
 
-            return <NavLinksList key={navLink.path} {...navLink} />;
-          })}
+          {isLoggedIn && (
+            <ListItem disablePadding onClick={logOut}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <LoginOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText>Log Out</ListItemText>
+              </ListItemButton>
+            </ListItem>
+          )}
 
           {/* Admin */}
           {isLoggedIn && user?.role === 'admin' && (

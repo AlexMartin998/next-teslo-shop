@@ -7,7 +7,6 @@ import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
 import ConfirmationNumberOutlinedIcon from '@mui/icons-material/ConfirmationNumberOutlined';
 import EscalatorWarningOutlinedIcon from '@mui/icons-material/EscalatorWarningOutlined';
 import FemaleOutlinedIcon from '@mui/icons-material/FemaleOutlined';
-import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import MaleOutlinedIcon from '@mui/icons-material/MaleOutlined';
 import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
 
@@ -24,11 +23,6 @@ export const authNavLinks: NavLinks[] = [
     path: '/auth/login',
     title: 'log In',
     Icon: VpnKeyOutlinedIcon,
-  },
-  {
-    path: '/logout',
-    title: 'log Out',
-    Icon: LoginOutlinedIcon,
   },
 ];
 

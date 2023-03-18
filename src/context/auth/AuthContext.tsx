@@ -13,6 +13,7 @@ interface AuthContextProps {
     email: string,
     password: string
   ) => Promise<RegisterReturn>;
+  logOut: () => void;
 }
 
 export const AuthContext = createContext({} as AuthContextProps);

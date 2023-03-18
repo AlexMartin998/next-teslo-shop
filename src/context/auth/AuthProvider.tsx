@@ -6,6 +6,7 @@ import { AuthActionType, AuthContext, authReducer } from './';
 import { tesloApi } from '@/api/axios-client';
 import { IUser } from '@/interfaces';
 import { RegisterReturn } from '../';
+import { useRouter } from 'next/router';
 
 export interface AuthState {
   isLoggedIn: boolean;
@@ -23,6 +24,7 @@ const Auth_INIT_STATE: AuthState = {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, dispatch] = useReducer(authReducer, Auth_INIT_STATE);
+  const { reload } = useRouter();
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
@@ -58,8 +60,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         hasError: false,
       };
     } catch (error) {
-      dispatch({ type: AuthActionType.logout });
-
       if (isAxiosError(error)) {
         return {
           hasError: true,
@@ -91,6 +91,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const logOut = () => {
+    Cookies.remove('token');
+    Cookies.remove('cart');
+
+    dispatch({ type: AuthActionType.logout });
+    reload();
+  };
+
   useEffect(() => {
     checkAuthToken();
   }, []);
@@ -103,6 +111,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         // methods
         login,
         registerUser,
+        logOut,
       }}
     >
       {children}
