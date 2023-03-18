@@ -1,4 +1,4 @@
-import { NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import {
   Box,
   Button,
@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 
 import { ShopLayout } from '@/layouts';
+import { isValidToken } from '@/shared/utils';
 
 const AdressPage: NextPage = () => {
   return (
@@ -77,6 +78,33 @@ const AdressPage: NextPage = () => {
       </Box>
     </ShopLayout>
   );
+};
+
+// // // Next.js < v12 - WIHOUT MIDDLEWARE (on each page that requires this validation)
+// - Only if you need to pre-render a page whose data must be fetched at REQUEST TIME
+// se ejecuta Solo en Server Side y c/req q haga el client
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { token = '' } = req.cookies; // xq cookies viajan en req time
+  let isAValidToken = false;
+
+  try {
+    await isValidToken(token);
+    isAValidToken = true;
+  } catch (error) {
+    isAValidToken = false;
+  }
+
+  if (!isAValidToken)
+    return {
+      redirect: {
+        destination: '/auth/login?p=/checkout/address',
+        permanent: false,
+      },
+    };
+
+  return {
+    props: {},
+  };
 };
 
 export default AdressPage;

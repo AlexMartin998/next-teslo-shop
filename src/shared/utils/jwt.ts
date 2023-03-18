@@ -8,6 +8,7 @@ export const signToken = (_id: string) => {
 
 export const isValidToken = async (token: string): Promise<string> => {
   validateEnv();
+  if (token.length <= 10) return Promise.reject('Invalid JWT');
 
   return new Promise((resolve, reject) => {
     try {

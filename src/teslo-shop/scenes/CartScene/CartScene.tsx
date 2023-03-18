@@ -7,7 +7,9 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
+
 import { CartList, OrderSummary } from './components';
+import NextLink from 'next/link';
 
 export interface CartSceneProps {}
 
@@ -33,9 +35,11 @@ const CartScene: React.FC<CartSceneProps> = () => {
               <OrderSummary />
 
               <Box sx={{ mt: 3 }}>
-                <Button color="secondary" className="circular-btn" fullWidth>
-                  Checkout
-                </Button>
+                <NextLink href="/checkout/address" prefetch={false}>
+                  <Button color="secondary" className="circular-btn" fullWidth>
+                    Checkout
+                  </Button>
+                </NextLink>
               </Box>
             </CardContent>
           </Card>
