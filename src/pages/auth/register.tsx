@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { Box, Button, Chip, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
@@ -7,7 +8,6 @@ import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 import { AuthLayout } from '@/layouts';
 import { useAuth } from '@/context';
-import { useNavigateTo } from '@/shared/hooks';
 import { registerFormSchema } from '@/shared/utils';
 
 type FormData = {
@@ -18,7 +18,7 @@ type FormData = {
 
 const RegisterPage = () => {
   const { registerUser } = useAuth();
-  const { navigateAndReplace } = useNavigateTo();
+  const router = useRouter();
   const [showError, setShowError] = useState(false);
   const [errMsg, setErrMsg] = useState('');
   const {
@@ -43,7 +43,7 @@ const RegisterPage = () => {
       return reset();
     }
 
-    navigateAndReplace('/');
+    router.replace(router.query?.p?.toString() || '/');
   };
 
   return (
@@ -112,7 +112,9 @@ const RegisterPage = () => {
 
             <Grid item xs={12} display="flex" justifyContent="center">
               <NextLink
-                href="/auth/login"
+                href={`/auth/login?p=${
+                  router.query?.p?.toString() || '/auth/login'
+                }`}
                 passHref
                 style={{ color: 'inherit' }}
               >

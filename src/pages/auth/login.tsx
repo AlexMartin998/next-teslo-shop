@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { Box, Button, Chip, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
@@ -9,7 +10,6 @@ import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { AuthLayout } from '@/layouts';
 import { loginFormSchema } from '@/shared/utils';
 import { useAuth } from '@/context';
-import { useNavigateTo } from '@/shared/hooks';
 
 type FormData = {
   email: string;
@@ -17,6 +17,7 @@ type FormData = {
 };
 
 const LoginPage: NextPage = () => {
+  const router = useRouter();
   const { login } = useAuth();
   const {
     register,
@@ -24,7 +25,6 @@ const LoginPage: NextPage = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: yupResolver(loginFormSchema) });
   const [showError, setShowError] = useState(false);
-  const { navigateAndReplace } = useNavigateTo();
 
   const onLogin = async ({ email, password }: FormData) => {
     setShowError(false);
@@ -38,7 +38,8 @@ const LoginPage: NextPage = () => {
       return setShowError(true);
     }
 
-    navigateAndReplace('/');
+    const destination = router.query?.p?.toString() || '/';
+    router.replace(destination);
   };
 
   return (
@@ -99,7 +100,7 @@ const LoginPage: NextPage = () => {
 
             <Grid item xs={12} display="flex" justifyContent="center">
               <NextLink
-                href="/auth/register"
+                href={`/auth/register?p=${router.query?.p?.toString() || '/auth/register'}`}
                 passHref
                 style={{ color: 'inherit' }}
               >

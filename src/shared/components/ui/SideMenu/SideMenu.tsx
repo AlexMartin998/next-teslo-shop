@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   Box,
-  capitalize,
   Divider,
   Drawer,
   IconButton,
@@ -20,7 +20,6 @@ import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
 
 import { useAuth, useUi } from '@/context';
-import { useNavigateTo } from '@/shared/hooks';
 import { adminNavLinks, categoriesNavLinks, privateNavLinks } from './navLinks';
 import NavLinksList from './NavLinkList/NavLinksList';
 
@@ -33,14 +32,14 @@ interface SMState {
 const SideMenu: React.FC<SideMenuProps> = () => {
   const { isMenuOpen, toggleMenu } = useUi();
   const { user, isLoggedIn, logOut } = useAuth();
-  const { navigateToPath } = useNavigateTo();
+  const { push: routerPush, asPath: routerAsPath } = useRouter();
   const [searchTerm, setSearchTerm] = useState<SMState['searchInput']>('');
   const isMobile = useMediaQuery('(max-width: 600px)');
 
   const onSearchTerm = () => {
     if (!searchTerm.trim().length) return;
 
-    navigateToPath(`/search/${searchTerm}`);
+    routerPush(`/search/${searchTerm}`);
     toggleMenu();
   };
 
@@ -90,9 +89,9 @@ const SideMenu: React.FC<SideMenuProps> = () => {
           {!isLoggedIn && (
             <NavLinksList
               key={'/auth/login'}
-              path="/auth/login"
+              path={`/auth/login?p=${routerAsPath}`}
               Icon={VpnKeyOutlinedIcon}
-              title="login"
+              title="Login"
             />
           )}
 
