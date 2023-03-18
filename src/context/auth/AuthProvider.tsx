@@ -1,4 +1,5 @@
 import { useReducer, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import { isAxiosError } from 'axios';
 
@@ -6,7 +7,6 @@ import { AuthActionType, AuthContext, authReducer } from './';
 import { tesloApi } from '@/api/axios-client';
 import { IUser } from '@/interfaces';
 import { RegisterReturn } from '../';
-import { useRouter } from 'next/router';
 
 export interface AuthState {
   isLoggedIn: boolean;

@@ -111,6 +111,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     <CartContext.Provider
       value={{
         ...state,
+        isMounted,
 
         // methods
         addProductToCart,
