@@ -44,11 +44,11 @@ const register = async (
       message: 'Email already registered!',
     });
   }
-  console.log({ email, password, name });
+
   try {
     const newUser = new User({ email, password, name, role: 'client' });
     await newUser.save();
-    console.log(newUser)
+
     const { role, _id } = newUser;
     const token = signToken(_id);
 

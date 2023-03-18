@@ -35,16 +35,17 @@ const CartScene: React.FC<CartSceneProps> = () => {
               <OrderSummary />
 
               <Box sx={{ mt: 3 }}>
-                <NextLink href="/checkout/address" prefetch={false}>
+                {/* No atrapa el middleware cuando uso NextLink a menos q haga el reload in prod */}
+                {/* <NextLink href="/checkout/address" prefetch={false}> */}
                   <Button
                     color="secondary"
                     className="circular-btn"
                     fullWidth
-                    // href="/checkout/address"
+                    href="/checkout/address"
                   >
                     Checkout
                   </Button>
-                </NextLink>
+                {/* </NextLink> */}
               </Box>
             </CardContent>
           </Card>

@@ -32,23 +32,24 @@ const validateJWT = async (
   res: NextApiResponse<HandlreData>
 ) => {
   const { token = '' } = req.cookies;
-  let userId;
+  let userId = '';
 
   try {
     userId = await isValidToken(token);
-
-    db.connect();
-    const user = await User.findById(userId).lean();
-    if (!user) return res.status(400).json({ message: 'Invalid token!' });
-    const { name, email, role } = user;
-
-    return res.status(200).json({
-      token: signToken(user._id),
-      user: { name, email, role },
-    });
   } catch (error) {
-    return res.status(500).json({ message: 'Invalid token!' });
-  } finally {
-    db.disconnect();
+    return res.status(401).json({ message: 'Invalid token' });
   }
+
+  await db.connect();
+  const user = await User.findById(userId).lean();
+  await db.disconnect();
+
+  if (!user) return res.status(400).json({ message: 'Invalid token' });
+
+  const { _id, email, role, name } = user;
+
+  return res.status(200).json({
+    token: signToken(_id),
+    user: { email, role, name },
+  });
 };
