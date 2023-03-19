@@ -154,7 +154,9 @@ const AdressPage: NextPage = () => {
               )}
             />
           </Grid> */}
+          {/* ================================== */}
           {/* require isMounted (useState + useEffect): */}
+          {/* tb se pude leer de las cookies en el useEffect y reset() con esa data, pero es mas largo: */}
           {/* <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
               <TextField
@@ -190,7 +192,7 @@ const AdressPage: NextPage = () => {
                   defaultValue={getAddressFromCookies().country || ''}
                   {...register('country')}
                   error={!!errors.country}
-                  helperText={ errors.country?.message }
+                  helperText={errors.country?.message}
                 >
                   {countries.map(country => (
                     <MenuItem key={country.code} value={country.code}>

@@ -13,12 +13,21 @@ import { ShopLayout } from '@/layouts';
 import { useCart } from '@/context';
 import { CartList, OrderSummary } from '@/teslo-shop/scenes/CartScene';
 import { countries } from '@/shared/utils';
+import { useEffect } from 'react';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 
 const SummaryPage = () => {
+  const router = useRouter();
   const {
     shippingAddress,
     orderSummary: { numberOfItems },
   } = useCart();
+
+  useEffect(() => {
+    const shippingAddress = JSON.parse(Cookies.get('checkoutAddress') || '{}');
+    if (!shippingAddress?.address) router.replace('/checkout/address');
+  }, [router]);
 
   if (!shippingAddress) return <></>;
 
