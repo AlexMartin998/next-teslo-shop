@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [status, data]);
 
-  /*  Own Custom Hook JWT -- Without NextAuh
+  /*  Own Custom Auth JWT -- Without NextAuh
   useEffect(() => {
     checkAuthToken();
   }, []);
