@@ -30,3 +30,44 @@ export const registerFormSchema = yup.object({
   email: emailYupValidation,
   password: passwordYupValidation,
 });
+
+export const addressFormSchema = yup.object({
+  firstName: yup
+    .string()
+    .required('First name requiered')
+    .min(2, 'Min 2 characteres')
+    .max(30, 'Max 12 characteres'),
+  lastName: yup
+    .string()
+    .required('Last name requiered')
+    .min(2, 'Min 2 characteres')
+    .max(30, 'Max 12 characteres'),
+  address: yup
+    .string()
+    .required('Address requiered')
+    .min(2, 'Min 2 characteres')
+    .max(30, 'Max 12 characteres'),
+  address2: yup
+    .string()
+    .max(30, 'Max 12 characteres'),
+  city: yup
+    .string()
+    .required('City requiered')
+    .min(2, 'Min 2 characteres')
+    .max(21, 'Max 21 characteres'),
+  zipCode: yup
+    .string()
+    .required('ZIP Code requiered')
+    .min(2, 'Min 2 characteres')
+    .max(18, 'Max 18 characteres'),
+  country: yup
+    .string()
+    .required('Country requiered')
+    .min(2, 'Min 2 characteres')
+    .max(21, 'Max 21 characteres'),
+  phone: yup
+    .string()
+    .required('Phone requiered')
+    .min(2, 'Min 2 characteres')
+    .max(24, 'Max 24characteres'),
+});
