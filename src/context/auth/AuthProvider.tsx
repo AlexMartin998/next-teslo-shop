@@ -94,6 +94,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const logOut = () => {
     Cookies.remove('token');
     Cookies.remove('cart');
+    Cookies.remove('checkoutAddress');
 
     dispatch({ type: AuthActionType.logout });
     reload();
