@@ -25,13 +25,13 @@ const Auth_INIT_STATE: AuthState = {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, dispatch] = useReducer(authReducer, Auth_INIT_STATE);
-  const { reload } = useRouter();
   const { data, status } = useSession();
 
   // // NextAuth
   useEffect(() => {
     if (status === 'authenticated') {
       // make sure that the user you recive here is sent correctly in [...nextAuth]
+      console.log(data.user);
       dispatch({ type: AuthActionType.login, payload: data.user as IUser });
     }
   }, [status, data]);

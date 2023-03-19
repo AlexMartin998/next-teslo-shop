@@ -27,7 +27,7 @@ const UserSchema = new Schema(
       required: [true, 'Password is required!'],
       trim: true,
       // maxlength: [30, 'A password must have less or equal than 30 characters'],  // seed errors
-      minlength: [5, 'A password must have less or equal than 5 characters'],
+      // minlength: [5, 'A password must have less or equal than 5 characters'],  // NextAuth errors
 
       // select: false,
     },
