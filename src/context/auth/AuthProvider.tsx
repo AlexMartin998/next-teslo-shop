@@ -2,6 +2,7 @@ import { useReducer, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import { isAxiosError } from 'axios';
+import { useSession } from 'next-auth/react';
 
 import { AuthActionType, AuthContext, authReducer } from './';
 import { tesloApi } from '@/api/axios-client';
@@ -25,6 +26,36 @@ const Auth_INIT_STATE: AuthState = {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, dispatch] = useReducer(authReducer, Auth_INIT_STATE);
   const { reload } = useRouter();
+  const { data, status } = useSession();
+
+  // // NextAuth
+  useEffect(() => {
+    if (status === 'authenticated') {
+      console.log(data);
+      // dispatch({ type: AuthActionType.login, payload: data.user as IUser });
+    }
+  }, [status, data]);
+
+  /*  Own Custom Hook JWT -- Without NextAuh
+  useEffect(() => {
+    checkAuthToken();
+  }, []);
+
+  const checkAuthToken = async () => {
+    if (!Cookies.get('token')) return dispatch({ type: AuthActionType.logout });
+
+    try {
+      const {
+        data: { token, user },
+      } = await tesloApi.get('/user/validate-token');
+
+      Cookies.set('token', token);
+      dispatch({ type: AuthActionType.login, payload: user });
+    } catch (error) {
+      Cookies.remove('token');
+      dispatch({ type: AuthActionType.logout });
+    }
+  }; */
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
@@ -75,22 +106,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const checkAuthToken = async () => {
-    if (!Cookies.get('token')) return dispatch({ type: AuthActionType.logout });
-
-    try {
-      const {
-        data: { token, user },
-      } = await tesloApi.get('/user/validate-token');
-
-      Cookies.set('token', token);
-      dispatch({ type: AuthActionType.login, payload: user });
-    } catch (error) {
-      Cookies.remove('token');
-      dispatch({ type: AuthActionType.logout });
-    }
-  };
-
   const logOut = () => {
     Cookies.remove('token');
     Cookies.remove('cart');
@@ -99,10 +114,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     dispatch({ type: AuthActionType.logout });
     reload();
   };
-
-  useEffect(() => {
-    checkAuthToken();
-  }, []);
 
   return (
     <AuthContext.Provider
