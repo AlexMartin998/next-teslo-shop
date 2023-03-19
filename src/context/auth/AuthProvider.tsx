@@ -1,8 +1,8 @@
 import { useReducer, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
+import { useSession, signOut } from 'next-auth/react';
 import { isAxiosError } from 'axios';
-import { useSession } from 'next-auth/react';
 
 import { AuthActionType, AuthContext, authReducer } from './';
 import { tesloApi } from '@/api/axios-client';
@@ -31,8 +31,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // // NextAuth
   useEffect(() => {
     if (status === 'authenticated') {
-      console.log(data);
-      // dispatch({ type: AuthActionType.login, payload: data.user as IUser });
+      // make sure that the user you recive here is sent correctly in [...nextAuth]
+      dispatch({ type: AuthActionType.login, payload: data.user as IUser });
     }
   }, [status, data]);
 
@@ -106,6 +106,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  /* // custom auth without NextAuth
   const logOut = () => {
     Cookies.remove('token');
     Cookies.remove('cart');
@@ -113,6 +114,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     dispatch({ type: AuthActionType.logout });
     reload();
+   }; */
+
+  const logOut = () => {
+    Cookies.remove('cart');
+    Cookies.remove('checkoutAddress');
+    signOut();
   };
 
   return (
