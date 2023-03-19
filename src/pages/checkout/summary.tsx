@@ -10,9 +10,29 @@ import {
 } from '@mui/material';
 
 import { ShopLayout } from '@/layouts';
+import { useCart } from '@/context';
 import { CartList, OrderSummary } from '@/teslo-shop/scenes/CartScene';
+import { countries } from '@/shared/utils';
 
 const SummaryPage = () => {
+  const {
+    shippingAddress,
+    orderSummary: { numberOfItems },
+  } = useCart();
+
+  if (!shippingAddress) return <></>;
+
+  const {
+    address,
+    city,
+    country,
+    firstName,
+    lastName,
+    phone,
+    zipCode,
+    address2 = '',
+  } = shippingAddress;
+
   return (
     <ShopLayout
       title="Order Summary"
@@ -30,7 +50,10 @@ const SummaryPage = () => {
         <Grid item xs={12} sm={5}>
           <Card className="summary-card">
             <CardContent>
-              <Typography>Summary (3 items)</Typography>
+              <Typography>
+                Summary ({numberOfItems}{' '}
+                {numberOfItems > 1 ? 'products' : 'product'})
+              </Typography>
               <Divider sx={{ my: 1 }} />
 
               <Box display="flex" justifyContent="space-between">
@@ -43,11 +66,20 @@ const SummaryPage = () => {
                 </NextLink>
               </Box>
 
-              <Typography>Alex Axes</Typography>
-              <Typography>Some address</Typography>
-              <Typography>Quito, 17172</Typography>
-              <Typography>Ecuador</Typography>
-              <Typography>+593 99 9999 999</Typography>
+              <Typography>
+                {firstName} {lastName}
+              </Typography>
+              <Typography>
+                {address}
+                {address2 ? `, ${address2}` : ''}
+              </Typography>
+              <Typography>
+                {city}, {zipCode}
+              </Typography>
+              <Typography>
+                {countries.find(c => c.code == country)?.name}
+              </Typography>
+              <Typography>{phone}</Typography>
 
               <Divider sx={{ my: 1 }} />
 
@@ -59,6 +91,7 @@ const SummaryPage = () => {
                   Edit
                 </NextLink>
               </Box>
+
               {/* Order Summary */}
               <OrderSummary />
 

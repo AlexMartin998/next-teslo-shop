@@ -1,20 +1,17 @@
-import { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import {
   Box,
   Button,
   FormControl,
-  FormHelperText,
   Grid,
-  InputLabel,
   MenuItem,
-  Select,
+  NoSsr,
   TextField,
   Typography,
 } from '@mui/material';
 import Cookies from 'js-cookie';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { ShopLayout } from '@/layouts';
@@ -58,7 +55,6 @@ const getAddressFromCookies = (): FormData => {
 
 const AdressPage: NextPage = () => {
   const {
-    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -69,19 +65,18 @@ const AdressPage: NextPage = () => {
   const router = useRouter();
   const { updateShippingAddress } = useCart();
 
-  const [isMounted, setIsMounted] = useState(false);
-
   const onAddressSubmit = (data: FormData) => {
     updateShippingAddress(data);
 
     router.push('/checkout/summary');
   };
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) return <></>;
+  // //  Without <NoSsr></NoSsr>
+  // const [isMounted, setIsMounted] = useState(false);
+  // useEffect(() => {
+  //   setIsMounted(true);
+  // }, []);
+  // if (!isMounted) return <></>;
 
   return (
     <ShopLayout title="Customer Address" pageDescription="Some description">
@@ -133,7 +128,7 @@ const AdressPage: NextPage = () => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          {/* <Grid item xs={12} sm={6}>
             <Controller
               name="country"
               control={control}
@@ -158,6 +153,55 @@ const AdressPage: NextPage = () => {
                 </FormControl>
               )}
             />
+          </Grid> */}
+          {/* require isMounted (useState + useEffect): */}
+          {/* <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <TextField
+                // key fixes the problem of uncontrolled change of select
+                key={getAddressFromCookies().country || ''}
+                select
+                variant="filled"
+                label="Country"
+                defaultValue={getAddressFromCookies().country || ''}
+                {...register('country', {
+                  required: 'Este campo es requerido',
+                })}
+                error={!!errors.country}
+                // helperText={ errors.country?.message }
+              >
+                {countries.map(country => (
+                  <MenuItem key={country.code} value={country.code}>
+                    {country.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </FormControl>
+          </Grid> */}
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <NoSsr>
+                <TextField
+                  // key fixes the problem of uncontrolled change of select
+                  key={getAddressFromCookies().country || ''}
+                  select
+                  variant="filled"
+                  label="Country"
+                  defaultValue={getAddressFromCookies().country || ''}
+                  {...register('country', {
+                    required: 'Este campo es requerido',
+                  })}
+                  error={!!errors.country}
+                  // helperText={ errors.country?.message }
+                >
+                  {countries.map(country => (
+                    <MenuItem key={country.code} value={country.code}>
+                      {country.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </NoSsr>
+            </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
