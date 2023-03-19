@@ -188,11 +188,9 @@ const AdressPage: NextPage = () => {
                   variant="filled"
                   label="Country"
                   defaultValue={getAddressFromCookies().country || ''}
-                  {...register('country', {
-                    required: 'Este campo es requerido',
-                  })}
+                  {...register('country')}
                   error={!!errors.country}
-                  // helperText={ errors.country?.message }
+                  helperText={ errors.country?.message }
                 >
                   {countries.map(country => (
                     <MenuItem key={country.code} value={country.code}>
