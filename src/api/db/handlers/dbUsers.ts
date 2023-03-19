@@ -19,6 +19,7 @@ export const checkUserEmailPassword = async (
     name,
     email: email.toLowerCase(),
     role,
+    other: 'AQUIIII  Logon y Register?',
   };
 };
 

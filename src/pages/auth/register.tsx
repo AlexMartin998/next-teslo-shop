@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
+import { getSession, signIn } from 'next-auth/react';
 import NextLink from 'next/link';
 import { Box, Button, Chip, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
@@ -30,6 +32,27 @@ const RegisterPage = () => {
 
   const onRegister = async ({ email, name, password }: FormData) => {
     setShowError(false);
+
+    // register with CredentialsProvider does need register endpoint
+    const { hasError, message } = await registerUser(name, email, password);
+    if (hasError) {
+      setErrMsg(message ?? '');
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+        setErrMsg('');
+      }, 2400);
+
+      return reset();
+    }
+
+    // como llama al Endpoint, se crea en DB, y con el `signIn` se hace el Login, creando el JWT con NextAuth ya q invoca al CredentialsProvider q valida q exista el user y q el pass haga match
+    await signIn('credentials', { email, password }); // only providers configured
+  };
+
+  /*  // Without NextAuth
+    const onRegister = async ({ email, name, password }: FormData) => {
+    setShowError(false);
     const { hasError, message } = await registerUser(name, email, password);
 
     if (hasError) {
@@ -44,7 +67,7 @@ const RegisterPage = () => {
     }
 
     router.replace(router.query?.p?.toString() || '/');
-  };
+  }; */
 
   return (
     <AuthLayout title="Sign Up">
@@ -135,6 +158,27 @@ const RegisterPage = () => {
       </Box>
     </AuthLayout>
   );
+};
+
+/* 
+
+
+*/
+// // auth protection with SSR
+// - Only if you need to pre-render a page whose data must be fetched at request time
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query,
+}) => {
+  const session = await getSession({ req });
+  const { p = '/' } = query;
+
+  if (session)
+    return { redirect: { destination: p.toString(), permanent: false } };
+
+  return {
+    props: {},
+  };
 };
 
 export default RegisterPage;

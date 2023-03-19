@@ -41,12 +41,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     password: string
   ): Promise<RegisterReturn> => {
     try {
-      const {
-        data: { token, user },
-      } = await tesloApi.post('/user/register', { name, email, password });
-
-      Cookies.set('token', token);
-      dispatch({ type: AuthActionType.login, payload: user });
+      await tesloApi.post('/user/register', { name, email, password });
 
       return {
         hasError: false,
@@ -110,6 +105,38 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return false;
     }
   };
+
+  const registerUser = async (
+    name: string,
+    email: string,
+    password: string
+  ): Promise<RegisterReturn> => {
+    try {
+      const {
+        data: { token, user },
+      } = await tesloApi.post('/user/register', { name, email, password });
+
+      Cookies.set('token', token);
+      dispatch({ type: AuthActionType.login, payload: user });
+
+      return {
+        hasError: false,
+      };
+    } catch (error) {
+      if (isAxiosError(error)) {
+        return {
+          hasError: true,
+          message: error.response?.data.message,
+        };
+      }
+
+      return {
+        hasError: true,
+        message:
+          'It has not been possible to register the user, please try again',
+      };
+    }
+  }; 
 
   const logOut = () => {
     Cookies.remove('token');

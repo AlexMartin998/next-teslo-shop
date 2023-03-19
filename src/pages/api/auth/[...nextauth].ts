@@ -21,11 +21,12 @@ export const authOptions: NextAuthOptions = {
           placeholder: 'Password',
         },
       },
+
+      // login & register pass through here
       async authorize(credentials) {
-        console.log(credentials);
+        // console.log(credentials);  // callbackUrl = url that init invoke this provider
 
-        // return null; // falle el login
-
+        // return null; // falla el auth
         return await dbUsers.checkUserEmailPassword(
           credentials!.email,
           credentials!.password
@@ -40,7 +41,7 @@ export const authOptions: NextAuthOptions = {
     // ...add more providers here
   ],
 
-  // custom pages
+  // // // custom pages
   pages: {
     signIn: '/auth/login',
     newUser: '/auth/register',
@@ -59,7 +60,7 @@ export const authOptions: NextAuthOptions = {
     maxAge: 60 * 60 * 24 * 30, // 30d in seconds
   },
 
-  // callbacks
+  // // // callbacks
   callbacks: {
     async jwt({ token, account, user }) {
       // console.log({token, account, user});
@@ -68,11 +69,12 @@ export const authOptions: NextAuthOptions = {
         token.accessToken = account.access_token;
 
         switch (account.type) {
+          // create or check if it already exist in DB and login
           case 'oauth':
-            // create or check if it already exist in DB
             token.user = await dbUsers.oAuthToDBUser(user?.email!, user?.name!);
             break;
 
+          // only login
           case 'credentials':
             token.user = user;
             break;
