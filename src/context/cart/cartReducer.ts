@@ -1,5 +1,5 @@
 import { CartState } from './';
-import { ICartProduct, IOrderSummary } from '@/interfaces';
+import { ICartProduct, IOrderSummary, IShippingAddress } from '@/interfaces';
 
 type CartAction =
   | {
@@ -9,14 +9,20 @@ type CartAction =
   | { type: CartActionType.updateProductsInCart; payload: ICartProduct[] }
   | { type: CartActionType.updateCartQuantity; payload: ICartProduct }
   | { type: CartActionType.removeProductoFromCart; payload: ICartProduct }
-  | { type: CartActionType.updateOrderSummary; payload: IOrderSummary };
+  | { type: CartActionType.updateOrderSummary; payload: IOrderSummary }
+  | { type: CartActionType.loadAddressFromCookie; payload: IShippingAddress }
+  | { type: CartActionType.updateShippingAddress; payload: IShippingAddress };
 
 export enum CartActionType {
   loadCartFromCookiesOrStorage = '[Cart] - Load cart from cookies | storage',
   updateProductsInCart = '[Cart] - Update products in cart',
   updateCartQuantity = '[Cart] - Update product quantity in cart',
   removeProductoFromCart = '[Cart] - Remove product from cart',
+
   updateOrderSummary = '[Cart] - Update order summary',
+
+  loadAddressFromCookie = '[Cart] - Load Address from cookie',
+  updateShippingAddress = '[Cart] - Update Shipping address',
 }
 
 export const cartReducer = (
@@ -63,6 +69,10 @@ export const cartReducer = (
 
     case CartActionType.updateOrderSummary:
       return { ...state, orderSummary: { ...action.payload } };
+
+    case CartActionType.loadAddressFromCookie:
+    case CartActionType.updateShippingAddress:
+      return { ...state, shippingAddress: action.payload };
 
     default:
       return state;

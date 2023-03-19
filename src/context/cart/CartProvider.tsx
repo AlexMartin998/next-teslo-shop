@@ -3,11 +3,12 @@ import Cookies from 'js-cookie';
 
 import { CartActionType, CartContext, cartReducer } from './';
 import { TesloConstantKey, tesloConstants } from '@/shared/constants';
-import { ICartProduct, IOrderSummary } from '@/interfaces';
+import { ICartProduct, IOrderSummary, IShippingAddress } from '@/interfaces';
 
 export interface CartState {
   cart: ICartProduct[];
   orderSummary: IOrderSummary;
+  shippingAddress?: IShippingAddress;
 }
 
 interface CartProviderProps {
@@ -22,6 +23,7 @@ const CART_INIT_STATE: CartState = {
     tax: 0,
     total: 0,
   },
+  shippingAddress: undefined,
 };
 
 export const CartProvider = ({ children }: CartProviderProps) => {
@@ -84,6 +86,16 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     });
   }, [isMounted, state.cart]);
 
+  // // shippingAddress from cookies
+  useEffect(() => {
+    if (!isMounted || !Cookies.get('checkoutAddress')) return;
+
+    dispatch({
+      type: CartActionType.loadAddressFromCookie,
+      payload: JSON.parse(Cookies.get('checkoutAddress') || '{}'),
+    });
+  }, [isMounted]);
+
   const addProductToCart = (productToAdd: ICartProduct) => {
     const updatedProductCart = [...state.cart];
     const foundProduct = updatedProductCart.find(
@@ -107,6 +119,18 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     dispatch({ type: CartActionType.removeProductoFromCart, payload: product });
   };
 
+  const updateShippingAddress = (address: IShippingAddress) => {
+    Cookies.set(
+      'checkoutAddress',
+      JSON.stringify({
+        ...address,
+        address2: address.address2 || '',
+      })
+    );
+
+    dispatch({ type: CartActionType.updateShippingAddress, payload: address });
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -117,6 +141,7 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         addProductToCart,
         updateCartQuantity,
         removeProductFromCart,
+        updateShippingAddress,
       }}
     >
       {children}

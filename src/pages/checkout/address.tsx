@@ -18,6 +18,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { ShopLayout } from '@/layouts';
+import { useCart } from '@/context';
 import { addressFormSchema, countries } from '@/shared/utils';
 
 type FormData = {
@@ -66,23 +67,12 @@ const AdressPage: NextPage = () => {
     defaultValues: getAddressFromCookies(),
   });
   const router = useRouter();
+  const { updateShippingAddress } = useCart();
 
   const [isMounted, setIsMounted] = useState(false);
 
   const onAddressSubmit = (data: FormData) => {
-    Cookies.set(
-      'checkoutAddress',
-      JSON.stringify({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        address: data.address,
-        address2: data.address2 || '',
-        city: data.city,
-        zipCode: data.zipCode,
-        country: data.country,
-        phone: data.phone,
-      })
-    );
+    updateShippingAddress(data);
 
     router.push('/checkout/summary');
   };
