@@ -33,7 +33,7 @@ const RegisterPage = () => {
   const onRegister = async ({ email, name, password }: FormData) => {
     setShowError(false);
 
-    // register with CredentialsProvider does need register endpoint
+    // register with CredentialsProvider DOES Need register endpoint
     const { hasError, message } = await registerUser(name, email, password);
     if (hasError) {
       setErrMsg(message ?? '');

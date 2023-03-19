@@ -1,9 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import { getSession, signIn } from 'next-auth/react';
-import { Box, Button, Chip, Grid, TextField, Typography } from '@mui/material';
+import { getSession, signIn, getProviders } from 'next-auth/react';
+import {
+  Box,
+  Button,
+  Chip,
+  Divider,
+  Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
@@ -25,12 +33,14 @@ const LoginPage: NextPage = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: yupResolver(loginFormSchema) });
   const [showError, setShowError] = useState(false);
+  const [providers, setProviders] = useState<any>({}); // tipar es dolor de cabeza :v
 
   const invalidCredentials = router.query?.error;
 
   const onLogin = async ({ email, password }: FormData) => {
     setShowError(false);
 
+    // don't need login endpoint 'cause it's handled by NextAuth
     await signIn('credentials', { email, password }); // only providers configured
   };
 
@@ -50,6 +60,12 @@ const LoginPage: NextPage = () => {
     const destination = router.query?.p?.toString() || '/';
     router.replace(destination);
   }; */
+
+  useEffect(() => {
+    getProviders().then(prov => {
+      setProviders(prov);
+    });
+  }, []);
 
   return (
     <AuthLayout title="Log In">
@@ -129,6 +145,34 @@ const LoginPage: NextPage = () => {
                 </span>
               </NextLink>
             </Grid>
+
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              my={2}
+            >
+              <Divider sx={{ width: '100%', mb: 4 }} />
+
+              {/* NextAuth Providers */}
+              {Object.values(providers).map((provider: any) => {
+                if (provider.id === 'credentials') return;
+
+                return (
+                  <Button
+                    key={provider.id}
+                    variant="outlined"
+                    color="primary"
+                    sx={{ mb: 1 }}
+                    onClick={() => signIn(provider.id)}
+                  >
+                    {provider.name}
+                  </Button>
+                );
+              })}
+            </Grid>
           </Grid>
         </Box>
       </form>
@@ -141,6 +185,7 @@ const LoginPage: NextPage = () => {
 
 
 */
+// // Auth validation with SSR, sacalo if it has already logged in
 // - Only if you need to pre-render a page whose data must be fetched at request time
 export const getServerSideProps: GetServerSideProps = async ({
   req,
