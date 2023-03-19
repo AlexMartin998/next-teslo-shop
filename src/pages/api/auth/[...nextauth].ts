@@ -40,6 +40,25 @@ export const authOptions: NextAuthOptions = {
     // ...add more providers here
   ],
 
+  // custom pages
+  pages: {
+    signIn: '/auth/login',
+    newUser: '/auth/register',
+  },
+
+  // // No funciona con JWT, solo cuando se almacenan en DB las Session
+  // https://next-auth.js.org/configuration/options
+  // x defaul es   JWT, asi q NO es necesario
+  // session: {
+  //   strategy: 'jwt',
+  //   maxAge: 2592000, // 30d in seconds
+  //   updateAge: 86400, // 1d
+  // },
+
+  jwt: {
+    maxAge: 60 * 60 * 24 * 30, // 30d in seconds
+  },
+
   // callbacks
   callbacks: {
     async jwt({ token, account, user }) {

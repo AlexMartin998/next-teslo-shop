@@ -22,7 +22,6 @@ export const checkUserEmailPassword = async (
   };
 };
 
-// TODO: al eliminar el use en DB, SIGUE estando Auth en NextAuth, resolver
 // create or check the user OAuth
 export const oAuthToDBUser = async (oAuthEmail: string, oAuthName: string) => {
   await db.connect();

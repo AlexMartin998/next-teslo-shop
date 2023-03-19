@@ -1,7 +1,6 @@
 import { useReducer, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import Cookies from 'js-cookie';
 import { useSession, signOut } from 'next-auth/react';
+import Cookies from 'js-cookie';
 import { isAxiosError } from 'axios';
 
 import { AuthActionType, AuthContext, authReducer } from './';
@@ -36,44 +35,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [status, data]);
 
-  /*  Own Custom Auth JWT -- Without NextAuh
-  useEffect(() => {
-    checkAuthToken();
-  }, []);
-
-  const checkAuthToken = async () => {
-    if (!Cookies.get('token')) return dispatch({ type: AuthActionType.logout });
-
-    try {
-      const {
-        data: { token, user },
-      } = await tesloApi.get('/user/validate-token');
-
-      Cookies.set('token', token);
-      dispatch({ type: AuthActionType.login, payload: user });
-    } catch (error) {
-      Cookies.remove('token');
-      dispatch({ type: AuthActionType.logout });
-    }
-  }; */
-
-  const login = async (email: string, password: string): Promise<boolean> => {
-    try {
-      const {
-        data: { token, user },
-      } = await tesloApi.post('/user/login', { email, password });
-
-      Cookies.set('token', token);
-      dispatch({ type: AuthActionType.login, payload: user });
-
-      return true;
-    } catch (error) {
-      // todo: set err msg in [ui]
-      dispatch({ type: AuthActionType.logout });
-      return false;
-    }
-  };
-
   const registerUser = async (
     name: string,
     email: string,
@@ -106,7 +67,50 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  /* // custom auth without NextAuth
+  const logOut = () => {
+    Cookies.remove('cart');
+    Cookies.remove('checkoutAddress');
+    signOut();
+  };
+
+  /*  Own Custom Auth JWT -- Without NextAuh
+  useEffect(() => {
+    checkAuthToken();
+  }, []);
+
+  const checkAuthToken = async () => {
+    if (!Cookies.get('token')) return dispatch({ type: AuthActionType.logout });
+
+    try {
+      const {
+        data: { token, user },
+      } = await tesloApi.get('/user/validate-token');
+
+      Cookies.set('token', token);
+      dispatch({ type: AuthActionType.login, payload: user });
+    } catch (error) {
+      Cookies.remove('token');
+      dispatch({ type: AuthActionType.logout });
+    }
+  }; 
+  
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      const {
+        data: { token, user },
+      } = await tesloApi.post('/user/login', { email, password });
+
+      Cookies.set('token', token);
+      dispatch({ type: AuthActionType.login, payload: user });
+
+      return true;
+    } catch (error) {
+      // todo: set err msg in [ui]
+      dispatch({ type: AuthActionType.logout });
+      return false;
+    }
+  };
+
   const logOut = () => {
     Cookies.remove('token');
     Cookies.remove('cart');
@@ -114,13 +118,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     dispatch({ type: AuthActionType.logout });
     reload();
-   }; */
-
-  const logOut = () => {
-    Cookies.remove('cart');
-    Cookies.remove('checkoutAddress');
-    signOut();
   };
+
+  
+  */
 
   return (
     <AuthContext.Provider
@@ -128,7 +129,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         ...state,
 
         // methods
-        login,
+        login: (() => {}) as any, // only for auth without NextAuth
         registerUser,
         logOut,
       }}
