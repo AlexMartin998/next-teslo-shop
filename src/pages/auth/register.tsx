@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { getSession, signIn } from 'next-auth/react';
+import { getServerSession } from 'next-auth';
+import { signIn } from 'next-auth/react';
 import NextLink from 'next/link';
 import { Box, Button, Chip, Grid, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
@@ -11,6 +12,7 @@ import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { AuthLayout } from '@/layouts';
 import { useAuth } from '@/context';
 import { registerFormSchema } from '@/shared/utils';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 type FormData = {
   name: string;
@@ -168,9 +170,11 @@ const RegisterPage = () => {
 // - Only if you need to pre-render a page whose data must be fetched at request time
 export const getServerSideProps: GetServerSideProps = async ({
   req,
+  res,
   query,
 }) => {
-  const session = await getSession({ req });
+  // https://next-auth.js.org/configuration/nextjs#in-getserversideprops
+  const session = await getServerSession(req, res, authOptions);
   const { p = '/' } = query;
 
   if (session)
