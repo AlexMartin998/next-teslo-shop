@@ -11,7 +11,8 @@ type CartAction =
   | { type: CartActionType.removeProductoFromCart; payload: ICartProduct }
   | { type: CartActionType.updateOrderSummary; payload: IOrderSummary }
   | { type: CartActionType.loadAddressFromCookie; payload: IShippingAddress }
-  | { type: CartActionType.updateShippingAddress; payload: IShippingAddress };
+  | { type: CartActionType.updateShippingAddress; payload: IShippingAddress }
+  | { type: CartActionType.orderCompleted };
 
 export enum CartActionType {
   loadCartFromCookiesOrStorage = '[Cart] - Load cart from cookies | storage',
@@ -23,6 +24,8 @@ export enum CartActionType {
 
   loadAddressFromCookie = '[Cart] - Load Address from cookie',
   updateShippingAddress = '[Cart] - Update Shipping address',
+
+  orderCompleted = '[Cart] - Order completed',
 }
 
 export const cartReducer = (
@@ -73,6 +76,9 @@ export const cartReducer = (
     case CartActionType.loadAddressFromCookie:
     case CartActionType.updateShippingAddress:
       return { ...state, shippingAddress: action.payload };
+
+    case CartActionType.orderCompleted:
+      return { ...state, cart: [], orderSummary: {} as IOrderSummary };
 
     default:
       return state;

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import {
@@ -6,6 +6,7 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   Divider,
   Grid,
   Typography,
@@ -25,13 +26,24 @@ const SummaryPage = () => {
     createOrder,
   } = useCart();
 
+  const [isPosting, setIsPosting] = useState(false); // avoid double post
+  const [errorMessage, setErrorMessage] = useState('');
+
   useEffect(() => {
     const shippingAddress = JSON.parse(Cookies.get('checkoutAddress') || '{}');
     if (!shippingAddress?.address) router.replace('/checkout/address');
   }, [router]);
 
-  const onCreateOrder = () => {
-    createOrder();
+  const onCreateOrder = async () => {
+    setIsPosting(true);
+
+    const { hasError, message } = await createOrder();
+    if (hasError) {
+      setIsPosting(false);
+      return setErrorMessage(message);
+    }
+
+    router.replace(`/orders/${message}`);
   };
 
   if (!shippingAddress) return <></>;
@@ -108,15 +120,18 @@ const SummaryPage = () => {
               {/* Order Summary */}
               <OrderSummary />
 
-              <Box sx={{ mt: 3 }}>
+              <Box sx={{ mt: 3 }} display="flex" flexDirection="column" gap={2}>
                 <Button
                   onClick={onCreateOrder}
                   color="secondary"
                   className="circular-btn"
                   fullWidth
+                  disabled={isPosting}
                 >
                   Confirm Order
                 </Button>
+
+                {errorMessage && <Chip color="error" label={errorMessage} />}
               </Box>
             </CardContent>
           </Card>

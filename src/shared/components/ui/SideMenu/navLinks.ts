@@ -51,7 +51,7 @@ export const privateNavLinks = [
     Icon: AccountCircleOutlinedIcon,
   },
   {
-    path: '/my-purchase-orders',
+    path: '/orders/history',
     title: 'My purchase orders',
     Icon: ConfirmationNumberOutlinedIcon,
   },

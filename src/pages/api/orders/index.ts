@@ -38,7 +38,7 @@ const createOrder = async (
   // // price validations
   // create an products id arr
   const productsId = orderItems.map(product => product._id);
-  
+
   await db.connect();
   // all products exist in my arr
   const dbProducts = await ProductModel.find({ _id: { $in: productsId } });

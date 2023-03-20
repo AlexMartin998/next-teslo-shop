@@ -1,5 +1,6 @@
 import { useEffect, useReducer, useState } from 'react';
 import Cookies from 'js-cookie';
+import { isAxiosError } from 'axios';
 
 import { CartActionType, CartContext, cartReducer } from './';
 import { tesloApi } from '@/api/axios-client';
@@ -137,7 +138,10 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     dispatch({ type: CartActionType.updateShippingAddress, payload: address });
   };
 
-  const createOrder = async () => {
+  const createOrder = async (): Promise<{
+    hasError: boolean;
+    message: string;
+  }> => {
     // // our state is an order with the appearance required by our back
     // extra validation
     if (!state.shippingAddress)
@@ -151,10 +155,18 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     };
 
     try {
-      const { data } = await tesloApi.post('/orders', body);
-      console.log(data);
+      const { data } = await tesloApi.post<IOrder>('/orders', body);
+
+      // clean cart
+      dispatch({ type: CartActionType.orderCompleted });
+
+      return { hasError: false, message: data._id! };
     } catch (error) {
       console.log(error);
+      if (isAxiosError(error))
+        return { hasError: true, message: error.response?.data.message };
+
+      return { hasError: true, message: 'Something went wrong' };
     }
   };
 
