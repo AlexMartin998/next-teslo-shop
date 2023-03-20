@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import { getSession, signIn, getProviders } from 'next-auth/react';
+import { signIn, getProviders } from 'next-auth/react';
+import { getServerSession } from 'next-auth/next';
 import {
   Box,
   Button,
@@ -18,6 +19,7 @@ import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 import { AuthLayout } from '@/layouts';
 import { loginFormSchema } from '@/shared/utils';
+import { authOptions } from '../api/auth/[...nextauth]';
 
 type FormData = {
   email: string;
@@ -189,10 +191,14 @@ const LoginPage: NextPage = () => {
 // - Only if you need to pre-render a page whose data must be fetched at request time
 export const getServerSideProps: GetServerSideProps = async ({
   req,
+  res,
   query,
 }) => {
-  const session = await getSession({ req });
+  // https://next-auth.js.org/configuration/nextjs#in-getserversideprops
+  const session = await getServerSession(req, res, authOptions);
   const { p = '/' } = query;
+
+  console.log({ p }, { session });
 
   if (session)
     return { redirect: { destination: p.toString(), permanent: false } };
@@ -201,5 +207,22 @@ export const getServerSideProps: GetServerSideProps = async ({
     props: {},
   };
 };
+
+/* // en prod   `getSession`    da error, Usar    `getServerSession`
+// https://next-auth.js.org/configuration/nextjs#in-getserversideprops
+// export const getServerSideProps: GetServerSideProps = async ({
+//   req,
+//   query,
+// }) => {
+//   const session = await getSession({ req });
+//   const { p = '/' } = query;
+
+//   if (session)
+//     return { redirect: { destination: p.toString(), permanent: false } };
+
+//   return {
+//     props: {},
+//   };
+// }; */
 
 export default LoginPage;
