@@ -4,7 +4,6 @@ import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { ProductSlidesShow, SizeSelector } from '@/teslo-shop/common';
 import { ItemCounter } from '@/shared/components';
 import { ICartProduct, IProduct, ISize } from '@/interfaces';
-import { useNavigateTo } from '@/shared/hooks';
 import { useCart } from '@/context';
 
 interface ProductSceneProps {
@@ -16,7 +15,6 @@ interface PSState {
 }
 
 const ProductScene: React.FC<ProductSceneProps> = ({ product }) => {
-  const { navigateToPath } = useNavigateTo();
   const { addProductToCart } = useCart();
   const [tempCartProduct, setTempCartProduct] = useState<
     PSState['productInCart']

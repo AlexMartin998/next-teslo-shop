@@ -30,7 +30,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     if (status === 'authenticated') {
       // make sure that the user you recive here is sent correctly in [...nextAuth]
-      console.log(data.user);
       dispatch({ type: AuthActionType.login, payload: data.user as IUser });
     }
   }, [status, data]);

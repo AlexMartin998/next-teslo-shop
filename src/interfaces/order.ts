@@ -1,7 +1,7 @@
-import { IOrderSummary, IShippingAddress, IUser } from './';
+import { IOrderSummary, IShippingAddress, ISize, IUser } from './';
 
 export interface IOrder {
-  _id: string;
+  _id?: string;
   user?: IUser | string;
   orderItems: IOrderItem[];
   shippingAddress: IShippingAddress;
@@ -16,9 +16,10 @@ export interface IOrder {
 export interface IOrderItem {
   _id: string;
   title: string;
-  size: string;
+  size: ISize;
   quantity: number;
   slug: string;
   image: string;
-  price: number; // it changes every day, so it's necesary stored
+  price: number; // it changes every day, so it's necesary to store it
+  gender: string;
 }

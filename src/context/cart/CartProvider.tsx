@@ -2,8 +2,14 @@ import { useEffect, useReducer, useState } from 'react';
 import Cookies from 'js-cookie';
 
 import { CartActionType, CartContext, cartReducer } from './';
+import { tesloApi } from '@/api/axios-client';
 import { TesloConstantKey, tesloConstants } from '@/shared/constants';
-import { ICartProduct, IOrderSummary, IShippingAddress } from '@/interfaces';
+import {
+  ICartProduct,
+  IOrder,
+  IOrderSummary,
+  IShippingAddress,
+} from '@/interfaces';
 
 export interface CartState {
   cart: ICartProduct[];
@@ -131,6 +137,27 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     dispatch({ type: CartActionType.updateShippingAddress, payload: address });
   };
 
+  const createOrder = async () => {
+    // // our state is an order with the appearance required by our back
+    // extra validation
+    if (!state.shippingAddress)
+      throw new Error('Delivery address has not been established!');
+
+    const body: IOrder = {
+      orderItems: state.cart.map(p => ({ ...p, size: p.size! })), // 'couse size in cart is opt
+      shippingAddress: state.shippingAddress,
+      orderSummary: state.orderSummary,
+      isPaid: false,
+    };
+
+    try {
+      const { data } = await tesloApi.post('/orders', body);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -142,6 +169,9 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         updateCartQuantity,
         removeProductFromCart,
         updateShippingAddress,
+
+        // orders
+        createOrder,
       }}
     >
       {children}

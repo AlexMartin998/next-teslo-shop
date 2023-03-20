@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import {
   Box,
@@ -8,20 +10,19 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
+import Cookies from 'js-cookie';
 
 import { ShopLayout } from '@/layouts';
 import { useCart } from '@/context';
 import { CartList, OrderSummary } from '@/teslo-shop/scenes/CartScene';
 import { countries } from '@/shared/utils';
-import { useEffect } from 'react';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/router';
 
 const SummaryPage = () => {
   const router = useRouter();
   const {
     shippingAddress,
     orderSummary: { numberOfItems },
+    createOrder,
   } = useCart();
 
   useEffect(() => {
@@ -29,8 +30,11 @@ const SummaryPage = () => {
     if (!shippingAddress?.address) router.replace('/checkout/address');
   }, [router]);
 
-  if (!shippingAddress) return <></>;
+  const onCreateOrder = () => {
+    createOrder();
+  };
 
+  if (!shippingAddress) return <></>;
   const {
     address,
     city,
@@ -105,7 +109,12 @@ const SummaryPage = () => {
               <OrderSummary />
 
               <Box sx={{ mt: 3 }}>
-                <Button color="secondary" className="circular-btn" fullWidth>
+                <Button
+                  onClick={onCreateOrder}
+                  color="secondary"
+                  className="circular-btn"
+                  fullWidth
+                >
                   Confirm Order
                 </Button>
               </Box>
