@@ -1,5 +1,6 @@
 import { GetServerSideProps, NextPage } from 'next';
 import { getServerSession } from 'next-auth';
+import { useRouter } from 'next/router';
 import {
   Box,
   Card,
@@ -18,12 +19,24 @@ import { dbOrders } from '@/api';
 import { CartList, OrderSummary } from '@/teslo-shop';
 import { authOptions } from '../api/auth/[...nextauth]';
 import { IOrder } from '@/interfaces';
+import { tesloApi } from '@/api/axios-client';
 
 interface OrderPageProps {
   order: IOrder;
 }
 
+export type OrderResponseBody = {
+  id: string;
+  status:
+    | 'COMPLETED'
+    | 'SAVED'
+    | 'APPROVED'
+    | 'VOIDED'
+    | 'PAYER_ACTION_REQUIRED';
+};
+
 const OrderPage: NextPage<OrderPageProps> = ({ order }) => {
+  const router = useRouter();
   const {
     firstName,
     lastName,
@@ -35,6 +48,22 @@ const OrderPage: NextPage<OrderPageProps> = ({ order }) => {
     zipCode,
   } = order.shippingAddress;
   const { orderSummary } = order;
+
+  const onOrderCompleted = async (details: OrderResponseBody) => {
+    if (details.status !== 'COMPLETED') return alert('No hay pago en PayPal');
+
+    try {
+      const { data } = await tesloApi.post(`/orders/pay`, {
+        transactionId: details.id,
+        orderId: order._id,
+      });
+
+      router.reload();
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  };
 
   return (
     <ShopLayout
@@ -115,10 +144,10 @@ const OrderPage: NextPage<OrderPageProps> = ({ order }) => {
                     }}
                     onApprove={(data, actions) => {
                       return actions.order!.capture().then(details => {
-                        console.log({ details });
+                        // console.log({ details });
+                        // const name = details.payer.name!.given_name;
 
-                        const name = details.payer.name!.given_name;
-                        
+                        onOrderCompleted(details);
                       });
                     }}
                   />
