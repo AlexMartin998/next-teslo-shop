@@ -6,6 +6,7 @@ import {
   Card,
   CardContent,
   Chip,
+  CircularProgress,
   Divider,
   Grid,
   Typography,
@@ -20,6 +21,7 @@ import { CartList, OrderSummary } from '@/teslo-shop';
 import { authOptions } from '../api/auth/[...nextauth]';
 import { IOrder } from '@/interfaces';
 import { tesloApi } from '@/api/axios-client';
+import { useState } from 'react';
 
 interface OrderPageProps {
   order: IOrder;
@@ -36,6 +38,7 @@ export type OrderResponseBody = {
 };
 
 const OrderPage: NextPage<OrderPageProps> = ({ order }) => {
+  const [isPaying, setIsPaying] = useState(false);
   const router = useRouter();
   const {
     firstName,
@@ -51,6 +54,7 @@ const OrderPage: NextPage<OrderPageProps> = ({ order }) => {
 
   const onOrderCompleted = async (details: OrderResponseBody) => {
     if (details.status !== 'COMPLETED') return alert('No hay pago en PayPal');
+    setIsPaying(true);
 
     try {
       const { data } = await tesloApi.post(`/orders/pay`, {
@@ -60,6 +64,7 @@ const OrderPage: NextPage<OrderPageProps> = ({ order }) => {
 
       router.reload();
     } catch (error) {
+      setIsPaying(false);
       console.log(error);
       alert(error);
     }
@@ -129,36 +134,51 @@ const OrderPage: NextPage<OrderPageProps> = ({ order }) => {
               <OrderSummary orderData={{ orderSummary }} />
 
               <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
-                {!order.isPaid ? (
-                  <PayPalButtons
-                    createOrder={(data, actions) => {
-                      return actions.order.create({
-                        purchase_units: [
-                          {
-                            amount: {
-                              value: `${order.orderSummary.total}`,
-                            },
-                          },
-                        ],
-                      });
-                    }}
-                    onApprove={(data, actions) => {
-                      return actions.order!.capture().then(details => {
-                        // console.log({ details });
-                        // const name = details.payer.name!.given_name;
+                {isPaying && (
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    my={2}
+                  >
+                    <CircularProgress />
+                  </Box>
+                )}
 
-                        onOrderCompleted(details);
-                      });
-                    }}
-                  />
-                ) : (
-                  <Chip
-                    sx={{ my: 2 }}
-                    label="Paid purchase order"
-                    variant="outlined"
-                    color="success"
-                    icon={<CreditScoreOutlinedIcon />}
-                  />
+                {!isPaying && (
+                  <>
+                    {!order.isPaid ? (
+                      <PayPalButtons
+                        createOrder={(data, actions) => {
+                          return actions.order.create({
+                            purchase_units: [
+                              {
+                                amount: {
+                                  value: `${order.orderSummary.total}`,
+                                },
+                              },
+                            ],
+                          });
+                        }}
+                        onApprove={(data, actions) => {
+                          return actions.order!.capture().then(details => {
+                            // console.log({ details });
+                            // const name = details.payer.name!.given_name;
+
+                            onOrderCompleted(details);
+                          });
+                        }}
+                      />
+                    ) : (
+                      <Chip
+                        sx={{ my: 2 }}
+                        label="Paid purchase order"
+                        variant="outlined"
+                        color="success"
+                        icon={<CreditScoreOutlinedIcon />}
+                      />
+                    )}
+                  </>
                 )}
               </Box>
             </CardContent>
