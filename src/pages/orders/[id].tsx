@@ -107,7 +107,7 @@ const OrderPage: NextPage<OrderPageProps> = ({ order }) => {
                         purchase_units: [
                           {
                             amount: {
-                              value: '221.99',
+                              value: `${order.orderSummary.total}`,
                             },
                           },
                         ],
@@ -118,7 +118,7 @@ const OrderPage: NextPage<OrderPageProps> = ({ order }) => {
                         console.log({ details });
 
                         const name = details.payer.name!.given_name;
-                        alert(`Transaction completed by ${name}`);
+                        
                       });
                     }}
                   />
