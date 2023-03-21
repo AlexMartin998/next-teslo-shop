@@ -1,3 +1,4 @@
+import { GetServerSideProps, NextPage } from 'next';
 import NextLink from 'next/link';
 import {
   Box,
@@ -13,9 +14,19 @@ import CreditCardOffOutlinedIcon from '@mui/icons-material/CreditCardOffOutlined
 import CreditScoreOutlinedIcon from '@mui/icons-material/CreditScoreOutlined';
 
 import { ShopLayout } from '@/layouts';
-import { CartList, OrderSummary } from '@/teslo-shop/scenes/CartScene';
+import { CartList, OrderSummary } from '@/teslo-shop';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../api/auth/[...nextauth]';
+import { dbOrders } from '@/api';
+import { IOrder } from '@/interfaces';
 
-const OrderPage = () => {
+interface OrderPageProps {
+  order: IOrder;
+}
+
+const OrderPage: NextPage<OrderPageProps> = ({ order }) => {
+  
+
   return (
     <ShopLayout
       title="Summary of order ADLSD234JND"
@@ -97,6 +108,47 @@ const OrderPage = () => {
       </Grid>
     </ShopLayout>
   );
+};
+
+// - Only if you need to pre-render a page whose data must be fetched at request time
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+  query,
+}) => {
+  const { id = '' } = query;
+  const session: any = await getServerSession(req, res, authOptions);
+  if (!session)
+    return {
+      redirect: {
+        destination: `/auth/login?p=/orders/${id}`,
+        permanent: false,
+      },
+    };
+
+  const order = await dbOrders.getOrderByID(id.toString());
+  if (!order)
+    return {
+      redirect: {
+        destination: `/orders/history`,
+        permanent: false,
+      },
+    };
+
+  // podriamos bloquear al user xq esta haciendo cosas raras
+  if (order.user !== session.user.id)
+    return {
+      redirect: {
+        destination: `/orders/history`,
+        permanent: false,
+      },
+    };
+
+  return {
+    props: {
+      order,
+    },
+  };
 };
 
 export default OrderPage;
