@@ -1,10 +1,9 @@
 import { Grid, Typography } from '@mui/material';
 
-import { CartContext, useCart } from '@/context';
+import { useCart } from '@/context';
 import { currency } from '@/shared/utils';
 import { TesloConstantKey, tesloConstants } from '@/shared/constants';
 import { IOrderSummary } from '@/interfaces';
-import { useContext } from 'react';
 
 interface OrdenSummaryProps {
   orderData?: {
