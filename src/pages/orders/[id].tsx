@@ -1,8 +1,8 @@
 import { GetServerSideProps, NextPage } from 'next';
 import NextLink from 'next/link';
+import { getServerSession } from 'next-auth';
 import {
   Box,
-  Button,
   Card,
   CardContent,
   Chip,
@@ -14,10 +14,9 @@ import CreditCardOffOutlinedIcon from '@mui/icons-material/CreditCardOffOutlined
 import CreditScoreOutlinedIcon from '@mui/icons-material/CreditScoreOutlined';
 
 import { ShopLayout } from '@/layouts';
-import { CartList, OrderSummary } from '@/teslo-shop';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../api/auth/[...nextauth]';
 import { dbOrders } from '@/api';
+import { CartList, OrderSummary } from '@/teslo-shop';
+import { authOptions } from '../api/auth/[...nextauth]';
 import { IOrder } from '@/interfaces';
 
 interface OrderPageProps {
@@ -25,82 +24,93 @@ interface OrderPageProps {
 }
 
 const OrderPage: NextPage<OrderPageProps> = ({ order }) => {
-  
+  const {
+    firstName,
+    lastName,
+    address,
+    address2 = '',
+    country,
+    city,
+    phone,
+    zipCode,
+  } = order.shippingAddress;
+  const { orderSummary } = order;
 
   return (
     <ShopLayout
-      title="Summary of order ADLSD234JND"
+      title="Order Summary"
       pageDescription="TesloShop is an E-commerce with over 213,000 products and 6 million customers worldwide."
     >
       <Typography variant="h1" component="h1" mb={4}>
-        Order: 12DJN23JN
+        Order: {order._id}
       </Typography>
 
-      {/* <Chip
-        sx={{ my: 2 }}
-        label="Pending payment"
-        variant="outlined"
-        color="error"
-        icon={<CreditCardOffOutlinedIcon />}
-      /> */}
-      <Chip
-        sx={{ my: 2 }}
-        label="Paid purchase order"
-        variant="outlined"
-        color="success"
-        icon={<CreditScoreOutlinedIcon />}
-      />
+      {!order.isPaid ? (
+        <Chip
+          sx={{ my: 2 }}
+          label="Pending payment"
+          variant="outlined"
+          color="error"
+          icon={<CreditCardOffOutlinedIcon />}
+        />
+      ) : (
+        <Chip
+          sx={{ my: 2 }}
+          label="Paid purchase order"
+          variant="outlined"
+          color="success"
+          icon={<CreditScoreOutlinedIcon />}
+        />
+      )}
 
       <Grid container spacing={3}>
         <Grid item xs={12} sm={7}>
-          <CartList />
+          <CartList products={order.orderItems} />
         </Grid>
 
         <Grid item xs={12} sm={5}>
           <Card className="summary-card">
             <CardContent>
-              <Typography>Summary (3 items)</Typography>
+              <Typography>
+                Summary ({order.orderSummary.numberOfItems}{' '}
+                {order.orderSummary.numberOfItems > 1 ? 'products' : 'product'})
+              </Typography>
               <Divider sx={{ my: 1 }} />
 
               <Box display="flex" justifyContent="space-between">
                 <Typography variant="subtitle1">Delivery address</Typography>
-                <NextLink
-                  href="/checkout/address"
-                  style={{ textDecoration: 'underline', color: 'black' }}
-                >
-                  Edit
-                </NextLink>
               </Box>
 
-              <Typography>Alex Axes</Typography>
-              <Typography>Some address</Typography>
-              <Typography>Quito, 17172</Typography>
-              <Typography>Ecuador</Typography>
-              <Typography>+593 99 9999 999</Typography>
+              <Typography>
+                {firstName} {lastName}
+              </Typography>
+              <Typography>
+                {address}
+                {address2 && `, ${address2}`}
+              </Typography>
+              <Typography>
+                {city}, {zipCode}
+              </Typography>
+              <Typography>{country}</Typography>
+              <Typography>{phone}</Typography>
 
-              <Divider sx={{ my: 1 }} />
+              <Divider sx={{ my: 2 }} />
 
-              <Box display="flex" justifyContent="end">
-                <NextLink
-                  href="/cart"
-                  style={{ textDecoration: 'underline', color: 'black' }}
-                >
-                  Edit
-                </NextLink>
-              </Box>
               {/* Order Summary */}
-              <OrderSummary />
+              <OrderSummary orderData={{ orderSummary }} />
 
-              <Box sx={{ mt: 3 }}>
-                <h1>Pay</h1>
-
-                <Chip
-                  sx={{ my: 2 }}
-                  label="Paid purchase order"
-                  variant="outlined"
-                  color="success"
-                  icon={<CreditScoreOutlinedIcon />}
-                />
+              <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
+                {!order.isPaid ? (
+                  <h1>Pay</h1>
+                ) : (
+                  <Chip
+                    sx={{ my: 2 }}
+                    label="Paid purchase order"
+                    variant="outlined"
+                    color="success"
+                    icon={<CreditScoreOutlinedIcon />}
+                  />
+                )}
               </Box>
             </CardContent>
           </Card>

@@ -1,15 +1,22 @@
 import { Grid, Typography } from '@mui/material';
 
-import { useCart } from '@/context';
+import { CartContext, useCart } from '@/context';
 import { currency } from '@/shared/utils';
 import { TesloConstantKey, tesloConstants } from '@/shared/constants';
+import { IOrderSummary } from '@/interfaces';
+import { useContext } from 'react';
 
-interface OrdenSummaryProps {}
+interface OrdenSummaryProps {
+  orderData?: {
+    orderSummary: IOrderSummary;
+  };
+}
 
-const OrdenSummary: React.FC<OrdenSummaryProps> = () => {
+const OrdenSummary: React.FC<OrdenSummaryProps> = ({ orderData }) => {
+  const cartState = useCart();
   const {
     orderSummary: { numberOfItems, subTotal, tax, total },
-  } = useCart();
+  } = orderData || cartState;
 
   return (
     <Grid container>

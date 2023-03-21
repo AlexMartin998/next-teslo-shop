@@ -10,13 +10,14 @@ import {
 
 import { useCart } from '@/context';
 import { ItemCounter } from '@/shared/components';
-import { ICartProduct } from '@/interfaces';
+import { ICartProduct, IOrderItem } from '@/interfaces';
 
 interface CartListProps {
   editable?: boolean;
+  products?: IOrderItem[];
 }
 
-const CartList: React.FC<CartListProps> = ({ editable = false }) => {
+const CartList: React.FC<CartListProps> = ({ editable = false, products }) => {
   const { cart, updateCartQuantity, removeProductFromCart } = useCart();
 
   const onNewCartQuantityValue = (
@@ -28,9 +29,11 @@ const CartList: React.FC<CartListProps> = ({ editable = false }) => {
     updateCartQuantity(product);
   };
 
+  const productsToShow = products || cart;
+
   return (
     <>
-      {cart.map(product => (
+      {productsToShow.map(product => (
         <Grid
           key={product.slug + product.size}
           container
@@ -61,7 +64,7 @@ const CartList: React.FC<CartListProps> = ({ editable = false }) => {
                   currentValue={product.quantity}
                   maxValue={10}
                   onUpdateQuantity={newQuantity =>
-                    onNewCartQuantityValue(product, newQuantity)
+                    onNewCartQuantityValue(product as ICartProduct, newQuantity)
                   }
                 />
               ) : (
@@ -84,7 +87,7 @@ const CartList: React.FC<CartListProps> = ({ editable = false }) => {
 
             {editable && (
               <Button
-                onClick={() => removeProductFromCart(product)}
+                onClick={() => removeProductFromCart(product as ICartProduct)}
                 variant="text"
                 color="secondary"
               >
