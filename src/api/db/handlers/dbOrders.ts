@@ -6,9 +6,9 @@ import { IOrder } from '@/interfaces';
 export const getOrderByID = async (id: string): Promise<IOrder | null> => {
   if (!isValidObjectId(id)) return null;
 
-  db.connect();
+  await db.connect();
   const order = await Order.findById(id).lean();
-  db.disconnect();
+  await db.disconnect();
 
   if (!order) return null;
 
