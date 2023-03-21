@@ -77,6 +77,11 @@ const createOrder = async (
   // all is ok
   const userId = session.user.id;
   const newOrder = new Order({ ...req.body, isPaid: false, user: userId });
+
+  // round for paypal: 2 decimals
+  newOrder.orderSummary.total =
+    Math.round(newOrder.orderSummary.total * 100) / 100;
+
   await newOrder.save();
 
   await db.disconnect();

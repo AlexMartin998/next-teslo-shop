@@ -36,6 +36,7 @@ const SummaryPage = () => {
 
   const onCreateOrder = async () => {
     setIsPosting(true);
+    if (!numberOfItems) return;
 
     const { hasError, message } = await createOrder();
     if (hasError) {
@@ -126,7 +127,7 @@ const SummaryPage = () => {
                   color="secondary"
                   className="circular-btn"
                   fullWidth
-                  disabled={isPosting}
+                  disabled={isPosting || !numberOfItems}
                 >
                   Confirm Order
                 </Button>
