@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import CreditCardOffOutlinedIcon from '@mui/icons-material/CreditCardOffOutlined';
 import CreditScoreOutlinedIcon from '@mui/icons-material/CreditScoreOutlined';
+import { PayPalButtons } from '@paypal/react-paypal-js';
 
 import { ShopLayout } from '@/layouts';
 import { dbOrders } from '@/api';
@@ -100,7 +101,27 @@ const OrderPage: NextPage<OrderPageProps> = ({ order }) => {
 
               <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
                 {!order.isPaid ? (
-                  <h1>Pay</h1>
+                  <PayPalButtons
+                    createOrder={(data, actions) => {
+                      return actions.order.create({
+                        purchase_units: [
+                          {
+                            amount: {
+                              value: '221.99',
+                            },
+                          },
+                        ],
+                      });
+                    }}
+                    onApprove={(data, actions) => {
+                      return actions.order!.capture().then(details => {
+                        console.log({ details });
+
+                        const name = details.payer.name!.given_name;
+                        alert(`Transaction completed by ${name}`);
+                      });
+                    }}
+                  />
                 ) : (
                   <Chip
                     sx={{ my: 2 }}
