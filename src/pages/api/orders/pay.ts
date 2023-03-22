@@ -3,6 +3,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import { IPayPal } from '@/interfaces';
 import { db, Order } from '@/api';
+import mongoose from 'mongoose';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]';
 
 type HandlreData = {
   message: string;
@@ -58,11 +61,17 @@ const payOrder = async (
   req: NextApiRequest,
   res: NextApiResponse<HandlreData>
 ) => {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session)
+    return res.status(401).json({ message: 'You must be logged in.' });
+
+  const { transactionId = '', orderId = '' } = req.body;
+  if (!mongoose.isValidObjectId(orderId))
+    return res.status(400).json({ message: 'Invalid ID' });
+
   const paypalBearerToken = await getPayPalBeaderToken();
   if (!paypalBearerToken)
     return res.status(400).json({ message: 'Token could not be confirmed' });
-
-  const { transactionId = '', orderId = '' } = req.body;
 
   const { data } = await axios.get<IPayPal.PayPalOrderStatusResponse>(
     `${process.env.PAYPAL_ORDERS_URL}/${transactionId}`,
@@ -94,6 +103,9 @@ const payOrder = async (
 
   orderInDb.save();
   await db.disconnect();
+
+  // // En este punto ya es segura la compra/transaccion/pago
+  // se podria meter + logica, notificaciones x slack, sockets, Dar Acceso a 1 recurso Virtual
 
   return res.status(200).json({ message: 'Order Paid' });
 };
