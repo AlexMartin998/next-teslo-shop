@@ -9,6 +9,8 @@ import EscalatorWarningOutlinedIcon from '@mui/icons-material/EscalatorWarningOu
 import FemaleOutlinedIcon from '@mui/icons-material/FemaleOutlined';
 import MaleOutlinedIcon from '@mui/icons-material/MaleOutlined';
 import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+
 
 export interface NavLinks {
   path: string;
@@ -58,6 +60,11 @@ export const privateNavLinks = [
 ];
 
 export const adminNavLinks: NavLinks[] = [
+  {
+    path: '/admin',
+    title: 'Dashboard',
+    Icon: DashboardOutlinedIcon,
+  },
   {
     path: '/products',
     title: 'products',
