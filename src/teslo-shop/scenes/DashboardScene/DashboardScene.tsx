@@ -8,14 +8,29 @@ import ProductionQuantityLimitsOutlinedIcon from '@mui/icons-material/Production
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 
 import { SummaryTile } from './components';
+import { DashboardSummaryResponse } from '@/interfaces';
 
-export interface DashboardSceneProps {}
+export interface DashboardSceneProps {
+  dashboardSummary: DashboardSummaryResponse;
+  refreshIn: number;
+}
 
-const DashboardScene: React.FC<DashboardSceneProps> = () => {
+const DashboardScene: React.FC<DashboardSceneProps> = ({
+  dashboardSummary: {
+    totalOrders,
+    paidOrders,
+    notPaidOrders,
+    totalClients,
+    totalProducts,
+    productsOutOfStock,
+    lowInventory,
+  },
+  refreshIn,
+}) => {
   return (
     <Grid container spacing={2}>
       <SummaryTile
-        title="50"
+        title={totalOrders}
         subTitle="Total Orders"
         icon={
           <CreditCardOutlinedIcon color="secondary" sx={{ fontSize: 40 }} />
@@ -23,31 +38,31 @@ const DashboardScene: React.FC<DashboardSceneProps> = () => {
       />
 
       <SummaryTile
-        title="3"
+        title={paidOrders}
         subTitle="Paid Orders"
         icon={<AttachMoneyOutlinedIcon color="success" sx={{ fontSize: 40 }} />}
       />
 
       <SummaryTile
-        title="1"
+        title={notPaidOrders}
         subTitle="Pending Orders"
         icon={<AttachMoneyOutlinedIcon color="error" sx={{ fontSize: 40 }} />}
       />
 
       <SummaryTile
-        title="4"
+        title={totalClients}
         subTitle="Clients"
         icon={<GroupOutlinedIcon color="primary" sx={{ fontSize: 40 }} />}
       />
 
       <SummaryTile
-        title="123"
+        title={totalProducts}
         subTitle="Products"
         icon={<CategoryOutlinedIcon color="warning" sx={{ fontSize: 40 }} />}
       />
 
       <SummaryTile
-        title="123"
+        title={productsOutOfStock}
         subTitle="Products out of stock"
         icon={
           <CancelPresentationOutlinedIcon color="error" sx={{ fontSize: 40 }} />
@@ -55,7 +70,7 @@ const DashboardScene: React.FC<DashboardSceneProps> = () => {
       />
 
       <SummaryTile
-        title="123"
+        title={lowInventory}
         subTitle="Products with low stock"
         icon={
           <ProductionQuantityLimitsOutlinedIcon
@@ -66,7 +81,7 @@ const DashboardScene: React.FC<DashboardSceneProps> = () => {
       />
 
       <SummaryTile
-        title="3"
+        title={refreshIn}
         subTitle="Update in: 3"
         icon={
           <AccessTimeOutlinedIcon color="secondary" sx={{ fontSize: 40 }} />
