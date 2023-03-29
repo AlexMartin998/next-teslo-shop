@@ -27,7 +27,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // //  // authorization
+  // // // authorization
   const validRoles: ValidAdminRoles[] = [
     ValidAdminRoles.admin,
     ValidAdminRoles.superUser,
