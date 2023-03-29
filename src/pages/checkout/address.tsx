@@ -63,15 +63,17 @@ const AdressPage: NextPage = () => {
     defaultValues: getAddressFromCookies(),
   });
   const router = useRouter();
-  const { updateShippingAddress } = useCart();
+  const { updateShippingAddress, cart } = useCart();
 
   const onAddressSubmit = (data: FormData) => {
+    if (!cart.length)
+      return alert('You need to have something in your cart to check orders');
     updateShippingAddress(data);
 
     router.push('/checkout/summary');
   };
 
-  // //  Without <NoSsr></NoSsr>
+  // //  Without <NoSsr></NoSsr>: Para q NO de error de NO MATH server con Client se uda esto:
   // const [isMounted, setIsMounted] = useState(false);
   // useEffect(() => {
   //   setIsMounted(true);

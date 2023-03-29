@@ -31,8 +31,8 @@ const SummaryPage = () => {
 
   useEffect(() => {
     const shippingAddress = JSON.parse(Cookies.get('checkoutAddress') || '{}');
-    if (!shippingAddress?.address) router.replace('/checkout/address');
-  }, [router]);
+    if (!shippingAddress?.address || !numberOfItems) router.replace('/checkout/address');
+  }, [numberOfItems, router]);
 
   const onCreateOrder = async () => {
     setIsPosting(true);
@@ -47,7 +47,7 @@ const SummaryPage = () => {
     router.replace(`/orders/${message}`);
   };
 
-  if (!shippingAddress) return <></>;
+  if (!shippingAddress || !numberOfItems) return <></>;
   const {
     address,
     city,

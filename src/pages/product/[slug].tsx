@@ -74,7 +74,7 @@ export default ProductPage;
 
 /* 
 
-  * SSR:  getServerSideProps()   <--  No usar para productos, ya q queremos el comportamiento de Udemy. Tiene contenido Estatico q lo Revalida c/24h (alumnos, calificaciones, title) y q hace fetch en req time unicamente de la data q cambia constantemente como el price
+  * SSR:  getServerSideProps()   <--  NOOO usar para Productos, ya q queremos el comportamiento de Udemy. Tiene contenido Estatico q lo Revalida c/24h (alumnos, calificaciones, title) y q hace fetch en req time unicamente de la data q cambia constantemente como el price
 
 
 // You should use getServerSideProps when:
