@@ -27,10 +27,9 @@ export interface NavbarProps {}
 const Navbar: React.FC<NavbarProps> = () => {
   const isMobile = useMediaQuery('(max-width: 600px)');
   const { toggleMenu } = useUi();
-  const {
-    orderSummary: { numberOfItems },
-  } = useCart();
+  const { orderSummary } = useCart();
   const { navigateToPath } = useNavigateTo();
+  const numberOfItems = orderSummary?.numberOfItems;
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchVisible, setIsSearchVisible] = useState(false);

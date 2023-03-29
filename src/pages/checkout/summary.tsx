@@ -31,12 +31,12 @@ const SummaryPage = () => {
 
   useEffect(() => {
     const shippingAddress = JSON.parse(Cookies.get('checkoutAddress') || '{}');
-    if (!shippingAddress?.address || !numberOfItems) router.replace('/checkout/address');
-  }, [numberOfItems, router]);
+    if (!shippingAddress?.address) router.replace('/checkout/address');
+  }, [router]);
 
   const onCreateOrder = async () => {
     setIsPosting(true);
-    if (!numberOfItems) return;
+    if (!numberOfItems || !shippingAddress) return;
 
     const { hasError, message } = await createOrder();
     if (hasError) {
@@ -47,7 +47,7 @@ const SummaryPage = () => {
     router.replace(`/orders/${message}`);
   };
 
-  if (!shippingAddress || !numberOfItems) return <></>;
+  if (!shippingAddress) return <></>;
   const {
     address,
     city,

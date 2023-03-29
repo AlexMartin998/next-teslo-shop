@@ -14,3 +14,8 @@ export enum ValidRoles {
   admin = 'admin',
   client = 'client',
 }
+
+export enum ValidAdminRoles {
+  admin = 'admin',
+  superUser = 'super-user',
+}
