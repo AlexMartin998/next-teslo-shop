@@ -6,8 +6,8 @@ import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 
 import { AdminLayout } from '@/layouts';
 import { FullScreenLoading } from '@/shared/components';
-import { IUser, ValidRoles } from '@/interfaces';
 import { tesloApi } from '@/api/axios-client';
+import { IUser, ValidRoles } from '@/interfaces';
 
 const UsersPage: NextPage = () => {
   const { data, isLoading, mutate } = useSWR<IUser[]>('/api/admin/users');

@@ -70,7 +70,7 @@ export const adminNavLinks: NavLinks[] = [
     Icon: CategoryOutlinedIcon,
   },
   {
-    path: '/orders',
+    path: '/admin/orders',
     title: 'Purchase orders',
     Icon: ConfirmationNumberOutlinedIcon,
   },
