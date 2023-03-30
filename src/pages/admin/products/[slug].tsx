@@ -170,6 +170,40 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
                 </FormControl>
               )}
             />
+
+            <Controller
+              name="sizes"
+              control={control}
+              render={({ field }) => (
+                <FormControl fullWidth margin="dense" error={!!errors.sizes}>
+                  <FormLabel>Sizes</FormLabel>
+                  <FormGroup>
+                    {validSizes.map(size => (
+                      <FormControlLabel
+                        key={size}
+                        label={size}
+                        control={
+                          <Checkbox
+                            value={size}
+                            checked={field.value.some(val => val === size)}
+                            onChange={({ target: { value } }, checked) => {
+                              checked
+                                ? field.onChange([...field.value, value])
+                                : field.onChange(
+                                    field.value.filter(val => val !== value)
+                                  );
+                            }}
+                          />
+                        }
+                      />
+                    ))}
+                  </FormGroup>
+                  <FormHelperText>
+                    {capitalize(`${(errors.sizes as any)?.message || ''}`)}
+                  </FormHelperText>
+                </FormControl>
+              )}
+            />
           </Grid>
 
           {/* Tags e imagenes */}
