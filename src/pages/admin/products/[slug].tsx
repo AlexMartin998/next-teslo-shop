@@ -150,7 +150,26 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
               )}
             />
 
-            
+            <Controller
+              name="gender"
+              control={control}
+              defaultValue={'' as any}
+              render={({ field }) => (
+                <FormControl sx={{ mb: 1 }}>
+                  <FormLabel>Gender</FormLabel>
+                  <RadioGroup row {...field}>
+                    {validGender.map(option => (
+                      <FormControlLabel
+                        key={option}
+                        value={option}
+                        control={<Radio color="secondary" />}
+                        label={capitalize(option)}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              )}
+            />
           </Grid>
 
           {/* Tags e imagenes */}
