@@ -1,5 +1,6 @@
 import * as yup from 'yup';
 
+// auth
 const emailYupValidation = yup
   .string()
   .matches(
@@ -31,6 +32,7 @@ export const registerFormSchema = yup.object({
   password: passwordYupValidation,
 });
 
+// Orders
 export const addressFormSchema = yup.object({
   firstName: yup
     .string()
@@ -47,9 +49,7 @@ export const addressFormSchema = yup.object({
     .required('Address requiered')
     .min(2, 'Min 2 characteres')
     .max(30, 'Max 12 characteres'),
-  address2: yup
-    .string()
-    .max(30, 'Max 12 characteres'),
+  address2: yup.string().max(30, 'Max 12 characteres'),
   city: yup
     .string()
     .required('City requiered')
@@ -70,4 +70,35 @@ export const addressFormSchema = yup.object({
     .required('Phone requiered')
     .min(2, 'Min 2 characteres')
     .max(24, 'Max 24characteres'),
+});
+
+export const newProductFormSchema = yup.object({
+  title: yup
+    .string()
+    .required('Title requiered')
+    .min(2, 'Min 2 characteres')
+    .max(150, 'Max 150 characteres'),
+  description: yup
+    .string()
+    .required('Title requiered')
+    .min(2, 'Min 2 characteres')
+    .max(810, 'Max 810 characteres'),
+  inStock: yup
+    .number()
+    .typeError('Amount must be a number')
+    .required('Stock requiered')
+    .positive()
+    .min(1, 'Min 1 product in stock'),
+  price: yup
+    .number()
+    .typeError('Amount must be a number')
+    .required('Price requiered')
+    .positive()
+    .min(0, 'Price required'),
+  slug: yup
+    .string()
+    .required('Price requiered')
+    .matches(/^\S+$/, 'Blanks not allowed')
+    .min(3, 'Min 3 characteres'),
+  sizes: yup.array().min(1, 'At least one option must be selected'),
 });

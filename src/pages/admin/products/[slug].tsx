@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 import { GetServerSideProps } from 'next';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Box,
   Button,
@@ -13,6 +15,7 @@ import {
   FormControl,
   FormControlLabel,
   FormGroup,
+  FormHelperText,
   FormLabel,
   Grid,
   ListItem,
@@ -27,7 +30,8 @@ import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 
 import { AdminLayout } from '@/layouts';
 import { dbProducts } from '@/api';
-import { IProduct } from '@/interfaces';
+import { newProductFormSchema } from '@/shared/utils';
+import { IProduct, IType } from '@/interfaces';
 
 const validTypes = ['shirts', 'pants', 'hoodies', 'hats'];
 const validGender = ['men', 'women', 'kid', 'unisex'];
@@ -37,7 +41,23 @@ interface ProductAdminPageProps {
   product: IProduct;
 }
 
+interface FormData extends IProduct {}
+
 const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm<FormData>({
+    defaultValues: product,
+    resolver: yupResolver(newProductFormSchema),
+  });
+
+  const onSaveProduct = async (formData: FormData) => {
+    console.log(formData);
+  };
+
   const onDeleteTag = (tag: string) => {};
 
   return (
@@ -46,7 +66,7 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
       subTitle={`Edit: ${product.title}`}
       icon={<DriveFileRenameOutlineOutlinedIcon />}
     >
-      <form>
+      <form onSubmit={handleSubmit(onSaveProduct)} noValidate>
         <Box display="flex" justifyContent="end" sx={{ mb: 1 }}>
           <Button
             color="secondary"
@@ -54,7 +74,7 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
             sx={{ width: '150px' }}
             type="submit"
           >
-            Guardar
+            Save
           </Button>
         </Box>
 
@@ -62,32 +82,37 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
           {/* Data */}
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Título"
+              label="Title"
               variant="filled"
               fullWidth
               sx={{ mb: 1 }}
-              // { ...register('name', {
-              //     required: 'Este campo es requerido',
-              //     minLength: { value: 2, message: 'Mínimo 2 caracteres' }
-              // })}
-              // error={ !!errors.name }
-              // helperText={ errors.name?.message }
+              {...register('title')}
+              error={!!errors.title}
+              helperText={errors.title?.message}
             />
 
             <TextField
-              label="Descripción"
+              label="Description"
               variant="filled"
               fullWidth
               multiline
+              rows={3} // <-- ESTO LO ARREGLA
               sx={{ mb: 1 }}
+              {...register('description')}
+              error={!!errors.description}
+              helperText={errors.description?.message}
             />
 
             <TextField
-              label="Inventario"
+              label="In Stock"
               type="number"
               variant="filled"
               fullWidth
+              InputProps={{ inputProps: { min: 1 } }}
               sx={{ mb: 1 }}
+              {...register('inStock')}
+              error={!!errors.inStock}
+              helperText={errors.inStock?.message}
             />
 
             <TextField
@@ -95,57 +120,37 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
               type="number"
               variant="filled"
               fullWidth
+              InputProps={{ inputProps: { min: 1 } }}
               sx={{ mb: 1 }}
+              {...register('price')}
+              error={!!errors.price}
+              helperText={errors.price?.message}
             />
 
             <Divider sx={{ my: 1 }} />
 
-            <FormControl sx={{ mb: 1 }}>
-              <FormLabel>Tipo</FormLabel>
-              <RadioGroup
-                row
-                // value={ status }
-                // onChange={ onStatusChanged }
-              >
-                {validTypes.map(option => (
-                  <FormControlLabel
-                    key={option}
-                    value={option}
-                    control={<Radio color="secondary" />}
-                    label={capitalize(option)}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
+            <Controller
+              name="type"
+              control={control}
+              defaultValue={'' as IType}
+              render={({ field }) => (
+                <FormControl sx={{ mb: 1 }}>
+                  <FormLabel>Type</FormLabel>
+                  <RadioGroup row {...field}>
+                    {validTypes.map(option => (
+                      <FormControlLabel
+                        key={option}
+                        value={option}
+                        control={<Radio color="secondary" />}
+                        label={capitalize(option)}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              )}
+            />
 
-            <FormControl sx={{ mb: 1 }}>
-              <FormLabel>Género</FormLabel>
-              <RadioGroup
-                row
-                // value={ status }
-                // onChange={ onStatusChanged }
-              >
-                {validGender.map(option => (
-                  <FormControlLabel
-                    key={option}
-                    value={option}
-                    control={<Radio color="secondary" />}
-                    label={capitalize(option)}
-                  />
-                ))}
-              </RadioGroup>
-            </FormControl>
-
-            <FormGroup>
-              <FormLabel>Tallas</FormLabel>
-              {validSizes.map(size => (
-                <FormControlLabel
-                  key={size}
-                  control={<Checkbox />}
-                  label={size}
-                />
-              ))}
-            </FormGroup>
+            
           </Grid>
 
           {/* Tags e imagenes */}
@@ -155,14 +160,17 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
               variant="filled"
               fullWidth
               sx={{ mb: 1 }}
+              {...register('slug')}
+              error={!!errors.slug}
+              helperText={errors.slug?.message}
             />
 
             <TextField
-              label="Etiquetas"
+              label="Tags"
               variant="filled"
               fullWidth
               sx={{ mb: 1 }}
-              helperText="Presiona [spacebar] para agregar"
+              helperText="Press [spacebar] to add"
             />
 
             <Box
@@ -199,13 +207,14 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
                 startIcon={<UploadFileOutlinedIcon />}
                 sx={{ mb: 3 }}
               >
-                Cargar imagen
+                Upload Image
               </Button>
 
               <Chip
-                label="Es necesario al 2 imagenes"
+                label="At least 2 images are required"
                 color="error"
                 variant="outlined"
+                sx={{ mb: 2 }}
               />
 
               <Grid container spacing={2}>
@@ -237,7 +246,6 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
 
 // You should use getServerSideProps when:
 // - Only if you need to pre-render a page whose data must be fetched at request time
-
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { slug = '' } = query;
   const product = await dbProducts.getProductBySlug(slug.toString());
