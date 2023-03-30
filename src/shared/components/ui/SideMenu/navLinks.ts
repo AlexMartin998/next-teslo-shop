@@ -65,7 +65,7 @@ export const adminNavLinks: NavLinks[] = [
     Icon: DashboardOutlinedIcon,
   },
   {
-    path: '/products',
+    path: '/admin/products',
     title: 'products',
     Icon: CategoryOutlinedIcon,
   },

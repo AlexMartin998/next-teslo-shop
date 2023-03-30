@@ -43,7 +43,6 @@ const columns: GridColDef[] = [
 const OrdersPage: NextPage = () => {
   const { data, isLoading } = useSWR<IOrder[]>('/api/admin/orders');
   if (!data && isLoading) return <FullScreenLoading />;
-  console.log(data);
 
   const rows = data!.map(order => ({
     id: order._id,
