@@ -13,6 +13,7 @@ export interface IUser {
 export enum ValidRoles {
   admin = 'admin',
   client = 'client',
+  superUser = 'super-user',
 }
 
 export enum ValidAdminRoles {

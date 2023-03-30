@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { db, User } from '@/api/db';
-import { IUser, ValidAdminRoles } from '@/interfaces';
+import { IUser, ValidRoles } from '@/interfaces';
 import { isValidObjectId } from 'mongoose';
 
 type HandlreData =
@@ -43,9 +43,10 @@ const updateUsers = async (
   if (!isValidObjectId(userId))
     return res.status(400).json({ message: 'Invalid user id' });
 
-  const validAdminRoles: ValidAdminRoles[] = [
-    ValidAdminRoles.admin,
-    ValidAdminRoles.superUser,
+  const validAdminRoles: ValidRoles[] = [
+    ValidRoles.admin,
+    ValidRoles.superUser,
+    ValidRoles.client,
   ];
   if (!validAdminRoles.includes(role))
     return res.status(401).json({ message: 'Unauthorized!' });

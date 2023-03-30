@@ -11,7 +11,6 @@ import MaleOutlinedIcon from '@mui/icons-material/MaleOutlined';
 import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 
-
 export interface NavLinks {
   path: string;
   title: string;
@@ -76,7 +75,7 @@ export const adminNavLinks: NavLinks[] = [
     Icon: ConfirmationNumberOutlinedIcon,
   },
   {
-    path: '/users',
+    path: '/admin/users',
     title: 'users',
     Icon: AdminPanelSettingsOutlinedIcon,
   },
