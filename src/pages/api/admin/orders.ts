@@ -23,7 +23,7 @@ const getOrders = async (
   res: NextApiResponse<HandlreData>
 ) => {
   await db.connect();
-  const orders = await Order.find()
+  const orders = await Order.find({})
     .sort({ createdAt: 'desc' })
     .populate('user', 'name email')
     .lean();

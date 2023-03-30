@@ -11,7 +11,6 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
-import CreditCardOffOutlinedIcon from '@mui/icons-material/CreditCardOffOutlined';
 import CreditScoreOutlinedIcon from '@mui/icons-material/CreditScoreOutlined';
 import { PayPalButtons } from '@paypal/react-paypal-js';
 
@@ -22,6 +21,7 @@ import { authOptions } from '../api/auth/[...nextauth]';
 import { IOrder } from '@/interfaces';
 import { tesloApi } from '@/api/axios-client';
 import { useState } from 'react';
+import { PaymentStatus } from '@/shared/components';
 
 interface OrderPageProps {
   order: IOrder;
@@ -79,23 +79,7 @@ const OrderPage: NextPage<OrderPageProps> = ({ order }) => {
         Order: {order._id}
       </Typography>
 
-      {!order.isPaid ? (
-        <Chip
-          sx={{ my: 2 }}
-          label="Pending payment"
-          variant="outlined"
-          color="error"
-          icon={<CreditCardOffOutlinedIcon />}
-        />
-      ) : (
-        <Chip
-          sx={{ my: 2 }}
-          label="Paid purchase order"
-          variant="outlined"
-          color="success"
-          icon={<CreditScoreOutlinedIcon />}
-        />
-      )}
+      <PaymentStatus isPaid={order.isPaid} />
 
       <Grid container spacing={3} className="fadeIn">
         <Grid item xs={12} sm={7}>
