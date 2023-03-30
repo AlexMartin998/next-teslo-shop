@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import useSWR from 'swr';
-import { CardMedia, Grid } from '@mui/material';
+import { CardMedia, Grid, Typography } from '@mui/material';
 import {
   DataGrid,
   GridColDef,
@@ -12,6 +12,7 @@ import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
 import { AdminLayout } from '@/layouts';
 import { FullScreenLoading } from '@/shared/components';
 import { IProduct } from '@/interfaces';
+import Link from 'next/link';
 
 const columns: GridColDef[] = [
   {
@@ -28,7 +29,21 @@ const columns: GridColDef[] = [
       </a>
     ),
   },
-  { field: 'title', headerName: 'Title', width: 300 },
+  {
+    field: 'title',
+    headerName: 'Title',
+    width: 300,
+    renderCell: ({ row }: GridRenderCellParams) => (
+      <Link href={`/admin/products/${row.slug}`}>
+        <Typography
+          variant="body2"
+          sx={{ color: 'black', textDecoration: 'underline' }}
+        >
+          {row.title}
+        </Typography>
+      </Link>
+    ),
+  },
   { field: 'gender', headerName: 'Gender' },
   { field: 'type', headerName: 'Type' },
   { field: 'inStock', headerName: 'Inventory' },
