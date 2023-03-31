@@ -1,4 +1,4 @@
-export const generateSlug = (string: string) => {
+export const generateSlug = (string: string): string => {
   const slug = string
     .trim()
     .replace(/[\s]+/g, '_')
