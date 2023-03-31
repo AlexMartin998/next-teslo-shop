@@ -188,7 +188,7 @@ const ProductAdminPage: NextPage<ProductAdminPageProps> = ({ product }) => {
               variant="filled"
               fullWidth
               multiline
-              rows={3} // <-- ESTO LO ARREGLA
+              rows={5} // avoid Too many re-renders.
               sx={{ mb: 1 }}
               {...register('description')}
               error={!!errors.description}
@@ -422,10 +422,10 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   let product: IProduct | null;
 
   if (slug === 'new') {
-    // create product
+    // create product 
     const tempProduct = JSON.parse(JSON.stringify(new ProductModel()));
     delete tempProduct._id;
-    tempProduct.images = ['img1.png', 'img2.png'];
+    tempProduct.images = [];
 
     product = tempProduct;
   } else {
