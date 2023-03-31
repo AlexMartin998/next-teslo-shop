@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { Controller, useForm } from 'react-hook-form';
@@ -58,6 +58,7 @@ const ProductAdminPage: NextPage<ProductAdminPageProps> = ({ product }) => {
     resolver: yupResolver(newProductFormSchema),
   });
   const [newTagValue, setNewTagValue] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null); // no re-render when it changes
 
   const onDeleteTag = (tag: string) => {
     const updatedTags = getValues('tags').filter(t => t !== tag);
@@ -93,6 +94,24 @@ const ProductAdminPage: NextPage<ProductAdminPageProps> = ({ product }) => {
 
     return () => subscription.unsubscribe();
   }, [setValue, watch]); */
+
+  const onImgsSelected = async ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    if (!target.files || !target.files.length) return;
+
+    try {
+      for (const file of target.files) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const { data } = await tesloApi.post('/admin/uploads', formData);
+        console.log(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const onSaveProduct = async (formData: FormData) => {
     if (formData.images.length < 2) return;
@@ -328,9 +347,21 @@ const ProductAdminPage: NextPage<ProductAdminPageProps> = ({ product }) => {
                 fullWidth
                 startIcon={<UploadFileOutlinedIcon />}
                 sx={{ mb: 3 }}
+                onClick={() => fileInputRef.current?.click()}
               >
                 Upload Image
               </Button>
+              <input
+                ref={fileInputRef}
+                onChange={onImgsSelected}
+                //
+                type="file"
+                name="images"
+                id="upload-images"
+                multiple
+                accept="image/png, image/gif, image/jpeg"
+                style={{ display: 'none' }}
+              />
 
               <Chip
                 label="At least 2 images are required"
