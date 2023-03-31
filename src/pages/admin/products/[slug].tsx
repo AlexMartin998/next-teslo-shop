@@ -18,8 +18,6 @@ import {
   FormHelperText,
   FormLabel,
   Grid,
-  ListItem,
-  Paper,
   Radio,
   RadioGroup,
   TextField,
@@ -32,7 +30,7 @@ import { AdminLayout } from '@/layouts';
 import { dbProducts } from '@/api';
 import { generateSlug, newProductFormSchema } from '@/shared/utils';
 import { IProduct, IType } from '@/interfaces';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const validTypes = ['shirts', 'pants', 'hoodies', 'hats'];
 const validGender = ['men', 'women', 'kid', 'unisex'];
@@ -50,18 +48,35 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
     handleSubmit,
     formState: { errors },
     control,
-    watch,
     setValue,
+    getValues,
   } = useForm<FormData>({
     defaultValues: product,
     resolver: yupResolver(newProductFormSchema),
   });
+  const [newTagValue, setNewTagValue] = useState('');
 
   const onSaveProduct = async (formData: FormData) => {
     console.log(formData);
   };
 
-  const onDeleteTag = (tag: string) => {};
+  const onDeleteTag = (tag: string) => {
+    const updatedTags = getValues('tags').filter(t => t !== tag);
+
+    setValue('tags', updatedTags, { shouldValidate: true });
+  };
+
+  const onNewTag = () => {
+    if (!newTagValue.trim()) return;
+
+    const currentTags = getValues('tags');
+    if (currentTags.includes(newTagValue.trim())) return;
+    setValue('tags', [...currentTags, newTagValue.trim().toLowerCase()], {
+      shouldValidate: true,
+    });
+
+    setNewTagValue('');
+  };
 
   /*   Con el Subscriber (watch del  useForm())
   useEffect(() => {
@@ -248,6 +263,12 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
               fullWidth
               sx={{ mb: 1 }}
               helperText="Press [spacebar] to add"
+              //
+              value={newTagValue}
+              onChange={({ target }) => setNewTagValue(target.value)}
+              onKeyDown={({ code }) =>
+                code !== 'Space' ? undefined : onNewTag()
+              }
             />
 
             <Box
@@ -260,7 +281,7 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
               }}
               component="ul"
             >
-              {product.tags.map(tag => {
+              {getValues('tags').map(tag => {
                 return (
                   <Chip
                     key={tag}
