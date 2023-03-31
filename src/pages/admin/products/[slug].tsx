@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { GetServerSideProps } from 'next';
+import { useState } from 'react';
+import { GetServerSideProps, NextPage } from 'next';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -30,7 +30,7 @@ import { AdminLayout } from '@/layouts';
 import { dbProducts } from '@/api';
 import { generateSlug, newProductFormSchema } from '@/shared/utils';
 import { IProduct, IType } from '@/interfaces';
-import { useEffect, useState } from 'react';
+import { tesloApi } from '@/api/axios-client';
 
 const validTypes = ['shirts', 'pants', 'hoodies', 'hats'];
 const validGender = ['men', 'women', 'kid', 'unisex'];
@@ -42,7 +42,8 @@ interface ProductAdminPageProps {
 
 interface FormData extends IProduct {}
 
-const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
+const ProductAdminPage: NextPage<ProductAdminPageProps> = ({ product }) => {
+  const [isSaving, setIsSaving] = useState(false);
   const {
     register,
     handleSubmit,
@@ -55,10 +56,6 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
     resolver: yupResolver(newProductFormSchema),
   });
   const [newTagValue, setNewTagValue] = useState('');
-
-  const onSaveProduct = async (formData: FormData) => {
-    console.log(formData);
-  };
 
   const onDeleteTag = (tag: string) => {
     const updatedTags = getValues('tags').filter(t => t !== tag);
@@ -95,6 +92,29 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
     return () => subscription.unsubscribe();
   }, [setValue, watch]); */
 
+  const onSaveProduct = async (formData: FormData) => {
+    if (formData.images.length < 2) return;
+    setIsSaving(true);
+
+    try {
+      const { data } = await tesloApi({
+        url: `/admin/products/${formData._id}`,
+        method: 'PUT',
+        data: formData,
+      });
+
+      console.log(data);
+
+      if (!formData._id) {
+      } else {
+        setIsSaving(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsSaving(false);
+    }
+  };
+
   return (
     <AdminLayout
       title={'Producto'}
@@ -108,6 +128,7 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
             startIcon={<SaveAsOutlinedIcon />}
             sx={{ width: '150px' }}
             type="submit"
+            disabled={isSaving}
           >
             Save
           </Button>

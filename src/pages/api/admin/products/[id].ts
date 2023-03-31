@@ -28,12 +28,14 @@ const updateProduct = async (
     return res.status(400).json({ message: 'Invalid ID' });
 
   const { images = [] } = req.body as IProduct;
-  if (images.length <= 2)
+  if (images.length < 2)
     return res.status(400).json({ message: 'At least 2 images are required' });
 
   try {
     await db.connect();
-    const product = await ProductModel.findById(id);
+    const product = await ProductModel.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
     if (!product) {
       await db.disconnect();
       return res.status(404).json({ message: 'Product not found' });
@@ -41,7 +43,6 @@ const updateProduct = async (
 
     // delete img from cloudinary
 
-    await product.updateOne(req.body);
     await db.disconnect();
 
     return res.status(200).json(product);
