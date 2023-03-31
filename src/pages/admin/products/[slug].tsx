@@ -30,8 +30,9 @@ import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 
 import { AdminLayout } from '@/layouts';
 import { dbProducts } from '@/api';
-import { newProductFormSchema } from '@/shared/utils';
+import { generateSlug, newProductFormSchema } from '@/shared/utils';
 import { IProduct, IType } from '@/interfaces';
+import { useEffect } from 'react';
 
 const validTypes = ['shirts', 'pants', 'hoodies', 'hats'];
 const validGender = ['men', 'women', 'kid', 'unisex'];
@@ -49,6 +50,8 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
     handleSubmit,
     formState: { errors },
     control,
+    watch,
+    setValue,
   } = useForm<FormData>({
     defaultValues: product,
     resolver: yupResolver(newProductFormSchema),
@@ -59,6 +62,23 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
   };
 
   const onDeleteTag = (tag: string) => {};
+
+  /*   Con el Subscriber (watch del  useForm())
+  useEffect(() => {
+    // observable
+    const subscription = watch((value, { name, type }) => {
+      if (name === 'title') {
+        const newSlug =
+          value.title
+            ?.trim()
+            .replace(/[^a-z0-9]+/gi, '_')
+            .toLowerCase() || '';
+        setValue('slug', newSlug);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [setValue, watch]); */
 
   return (
     <AdminLayout
@@ -89,6 +109,10 @@ const ProductAdminPage: FC<ProductAdminPageProps> = ({ product }) => {
               {...register('title')}
               error={!!errors.title}
               helperText={errors.title?.message}
+              // slug: without useEffect and subscribers
+              onChange={({ target }) =>
+                setValue('slug', generateSlug(target.value))
+              }
             />
 
             <TextField

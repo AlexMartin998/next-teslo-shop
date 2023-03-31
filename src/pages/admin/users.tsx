@@ -16,7 +16,9 @@ const UsersPage: NextPage = () => {
   const onRoleUpdate = async (userId: string, newRole: ValidRoles) => {
     try {
       await tesloApi.put('/admin/users', { userId, role: newRole });
-      mutate(data!.map(u => (u._id === userId ? { ...u, role: newRole } : u))); // after upd req
+
+      // nos evita useState y actualiza el state (re-render cambios) - after upd req
+      mutate(data!.map(u => (u._id === userId ? { ...u, role: newRole } : u)));
     } catch (error) {
       console.log(error);
       alert('Something wento wrong');
