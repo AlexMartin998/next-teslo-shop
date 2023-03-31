@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { v2 as cloudinary } from 'cloudinary';
 import formidable from 'formidable';
-import fs from 'fs';
 
-import { db } from '@/api/db';
+cloudinary.config(process.env.CLOUDINARY_URL || '');
 
 type HandlreData = { message: string };
 
@@ -26,6 +26,55 @@ export default function handler(
   }
 }
 
+// upload to cloudinary
+const saveFile = async (file: formidable.File): Promise<string> => {
+  const { secure_url } = await cloudinary.uploader.upload(file.filepath, {
+    folder: 'next-teslo-shop',
+  });
+
+  return secure_url;
+};
+
+const parseFiles = async (req: NextApiRequest): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const form = new formidable.IncomingForm();
+    form.parse(req, async (err, fields, files) => {
+      // console.log({ err, fields, files });
+      if (err) return reject(err);
+      if ((files.file as formidable.File).size > 3 * 1024 * 1024)
+        return reject({
+          type: 'sizeError',
+          message: 'Image exceeds the 2 MB allowed',
+        });
+
+      const filePath = await saveFile(files.file as formidable.File);
+      resolve(filePath);
+    });
+  });
+};
+
+const uploadImage = async (
+  req: NextApiRequest,
+  res: NextApiResponse<HandlreData>
+) => {
+  try {
+    const filePath = await parseFiles(req);
+
+    return res.status(200).json({ message: filePath });
+  } catch (error: any) {
+    console.log(error);
+    if (error?.type === 'sizeError')
+      return res.status(400).json({
+        message: error.message,
+      });
+
+    return res.status(500).json({
+      message: 'Something went wrong',
+    });
+  }
+};
+
+/* fs: Not Recommended
 // // avoid storing in fs
 const saveFile = async (file: formidable.File) => {
   const data = fs.readFileSync(file.filepath);
@@ -46,16 +95,5 @@ const parseFiles = async (req: NextApiRequest) => {
       resolve(true);
     });
   });
-};
-
-const uploadImage = async (
-  req: NextApiRequest,
-  res: NextApiResponse<HandlreData>
-) => {
-  await parseFiles(req);
-
-  await db.connect();
-  await db.disconnect();
-
-  return res.status(200).json({ message: 'Successful request' });
-};
+  
+*/
