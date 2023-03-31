@@ -56,10 +56,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
             <CardMedia
               component="img"
+              // image={
+              //   isHovered
+              //     ? `/products/${product.images[1]}`
+              //     : `/products/${product.images[0]}`
+              // }
               image={
                 isHovered
-                  ? `/products/${product.images[1]}`
-                  : `/products/${product.images[0]}`
+                  ? product.images[1].startsWith('https')
+                    ? product.images[1]
+                    : `/products/${product.images[1]}`
+                  : product.images[0].startsWith('https')
+                    ? product.images[0]
+                    : `/products/${product.images[0]}`
               }
               alt={product.title}
               className="fadeIn"

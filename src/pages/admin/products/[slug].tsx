@@ -373,12 +373,14 @@ const ProductAdminPage: NextPage<ProductAdminPageProps> = ({ product }) => {
                 style={{ display: 'none' }}
               />
 
-              <Chip
-                label="At least 2 images are required"
-                color="error"
-                variant="outlined"
-                sx={{ mb: 2 }}
-              />
+              {getValues('images').length < 2 && (
+                <Chip
+                  label="At least 2 images are required"
+                  color="error"
+                  variant="outlined"
+                  sx={{ mb: 3 }}
+                />
+              )}
 
               <Grid container spacing={2}>
                 {getValues('images').map(img => (

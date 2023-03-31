@@ -19,7 +19,7 @@ const ProductScene: React.FC<ProductSceneProps> = ({ product }) => {
   const [tempCartProduct, setTempCartProduct] = useState<
     PSState['productInCart']
   >({
-    _id: product._id,
+    _id: product._id!,
     image: product.images[0],
     price: product.price,
     size: undefined,

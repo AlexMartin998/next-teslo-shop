@@ -10,8 +10,8 @@ const ProductSlidesShow: React.FC<ProductSlidesShowProps> = ({ images }) => {
   return (
     <Slide easing="ease" duration={7000} indicators>
       {images.map(url => {
-        const imgUrl = `/products/${url}`;
-
+        // const imgUrl = `/products/${url}`;
+        const imgUrl = url.startsWith('https') ? url : `/products/${url}`;
         return (
           <div key={imgUrl} className={`${styles['each-slide']}`}>
             <div
