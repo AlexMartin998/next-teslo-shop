@@ -41,6 +41,14 @@ const updateProduct = async (
       return res.status(404).json({ message: 'Product not found' });
     }
 
+    const productInDB = await ProductModel.findOne({ slug: req.body.slug });
+    if (productInDB) {
+      await db.disconnect();
+      return res
+        .status(400)
+        .json({ message: 'A product with that slug already exists' });
+    }
+
     // delete img from cloudinary
 
     await db.disconnect();
