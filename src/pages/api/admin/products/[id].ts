@@ -1,8 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { isValidObjectId } from 'mongoose';
+import { v2 as cloudinary } from 'cloudinary';
 
 import { db, ProductModel } from '@/api/db';
 import { IProduct } from '@/interfaces';
-import { isValidObjectId } from 'mongoose';
+
+cloudinary.config(process.env.CLOUDINARY_URL || '');
 
 type HandlreData = { message: string } | IProduct;
 
@@ -33,24 +36,24 @@ const updateProduct = async (
 
   try {
     await db.connect();
-    const product = await ProductModel.findByIdAndUpdate(id, req.body, {
-      new: true,
-    });
+    const product = await ProductModel.findById(id);
     if (!product) {
       await db.disconnect();
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    const productInDB = await ProductModel.findOne({ slug: req.body.slug });
-    if (productInDB) {
-      await db.disconnect();
-      return res
-        .status(400)
-        .json({ message: 'A product with that slug already exists' });
-    }
-
     // delete img from cloudinary
+    product.images.forEach(async image => {
+      if (!images.includes(image)) {
+        const [fileId, extensionFile] = image
+          .substring(image.lastIndexOf('/') + 1)
+          .split('.');
 
+        await cloudinary.uploader.destroy(`next-teslo-shop/${fileId}`);
+      }
+    });
+
+    await product.updateOne(req.body);
     await db.disconnect();
 
     return res.status(200).json(product);

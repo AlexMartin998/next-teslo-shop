@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
 import { getServerSession } from 'next-auth';
 import { useRouter } from 'next/router';
@@ -18,10 +19,9 @@ import { ShopLayout } from '@/layouts';
 import { dbOrders } from '@/api';
 import { CartList, OrderSummary } from '@/teslo-shop';
 import { authOptions } from '../api/auth/[...nextauth]';
-import { IOrder } from '@/interfaces';
 import { tesloApi } from '@/api/axios-client';
-import { useState } from 'react';
 import { PaymentStatus } from '@/shared/components';
+import { IOrder } from '@/interfaces';
 
 interface OrderPageProps {
   order: IOrder;

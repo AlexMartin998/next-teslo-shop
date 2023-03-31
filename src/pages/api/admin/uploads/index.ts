@@ -4,7 +4,7 @@ import formidable from 'formidable';
 
 cloudinary.config(process.env.CLOUDINARY_URL || '');
 
-type HandlreData = { message: string };
+type HandlreData = { message: string } | { filePath: string };
 
 // like middleware in nextjs: No hace el parce de la data xq no es text, sino images
 export const config = {
@@ -60,7 +60,7 @@ const uploadImage = async (
   try {
     const filePath = await parseFiles(req);
 
-    return res.status(200).json({ message: filePath });
+    return res.status(200).json({ filePath });
   } catch (error: any) {
     console.log(error);
     if (error?.type === 'sizeError')

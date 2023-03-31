@@ -106,11 +106,21 @@ const ProductAdminPage: NextPage<ProductAdminPageProps> = ({ product }) => {
         formData.append('file', file);
 
         const { data } = await tesloApi.post('/admin/uploads', formData);
-        console.log(data);
+        setValue('images', [...getValues('images'), data.filePath], {
+          shouldValidate: true,
+        });
       }
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const onDeleteImage = async (image: string) => {
+    setValue(
+      'images',
+      getValues('images').filter(img => img !== image),
+      { shouldValidate: true } // to see the real time
+    );
   };
 
   const onSaveProduct = async (formData: FormData) => {
@@ -118,7 +128,7 @@ const ProductAdminPage: NextPage<ProductAdminPageProps> = ({ product }) => {
     setIsSaving(true);
 
     try {
-      const { data } = await tesloApi({
+      await tesloApi({
         url: formData._id
           ? `/admin/products/${formData._id}`
           : '/admin/products',
@@ -371,17 +381,23 @@ const ProductAdminPage: NextPage<ProductAdminPageProps> = ({ product }) => {
               />
 
               <Grid container spacing={2}>
-                {product.images.map(img => (
+                {getValues('images').map(img => (
                   <Grid item xs={4} sm={3} key={img}>
                     <Card>
                       <CardMedia
                         component="img"
                         className="fadeIn"
-                        image={`/products/${img}`}
+                        image={
+                          img.startsWith('https') ? img : `/products/${img}`
+                        }
                         alt={img}
                       />
                       <CardActions>
-                        <Button fullWidth color="error">
+                        <Button
+                          fullWidth
+                          color="error"
+                          onClick={() => onDeleteImage(img)}
+                        >
                           Borrar
                         </Button>
                       </CardActions>
