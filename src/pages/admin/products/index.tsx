@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import useSWR from 'swr';
-import { CardMedia, Grid, Typography } from '@mui/material';
+import { Box, Button, CardMedia, Grid, Typography } from '@mui/material';
 import {
   DataGrid,
   GridColDef,
@@ -8,11 +8,13 @@ import {
   GridToolbar,
 } from '@mui/x-data-grid';
 import InventoryOutlinedIcon from '@mui/icons-material/InventoryOutlined';
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 
 import { AdminLayout } from '@/layouts';
 import { FullScreenLoading } from '@/shared/components';
 import { IProduct } from '@/interfaces';
 import Link from 'next/link';
+import NextLink from 'next/link';
 
 const columns: GridColDef[] = [
   {
@@ -73,6 +75,17 @@ const ProductsAdminPage: NextPage = () => {
       subTitle="Product Maintenance"
       icon={<InventoryOutlinedIcon />}
     >
+      <Box display="flex" justifyContent="end" sx={{ mb: 2 }}>
+        <NextLink href={`/admin/products/new`}>
+          <Button
+            startIcon={<AddCircleOutlineOutlinedIcon />}
+            color="secondary"
+          >
+            Create Product
+          </Button>
+        </NextLink>
+      </Box>
+
       <Grid container className="fadeIn">
         <Grid item xs={12} sx={{ height: 650, width: '100%' }}>
           <DataGrid

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { GetServerSideProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -27,7 +28,7 @@ import SaveAsOutlinedIcon from '@mui/icons-material/SaveAsOutlined';
 import UploadFileOutlinedIcon from '@mui/icons-material/UploadFileOutlined';
 
 import { AdminLayout } from '@/layouts';
-import { dbProducts } from '@/api';
+import { dbProducts, ProductModel } from '@/api';
 import { generateSlug, newProductFormSchema } from '@/shared/utils';
 import { IProduct, IType } from '@/interfaces';
 import { tesloApi } from '@/api/axios-client';
@@ -44,6 +45,7 @@ interface FormData extends IProduct {}
 
 const ProductAdminPage: NextPage<ProductAdminPageProps> = ({ product }) => {
   const [isSaving, setIsSaving] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -98,14 +100,15 @@ const ProductAdminPage: NextPage<ProductAdminPageProps> = ({ product }) => {
 
     try {
       const { data } = await tesloApi({
-        url: `/admin/products/${formData._id}`,
-        method: 'PUT',
+        url: formData._id
+          ? `/admin/products/${formData._id}`
+          : '/admin/products',
+        method: formData._id ? 'PUT' : 'POST',
         data: formData,
       });
 
-      console.log(data);
-
       if (!formData._id) {
+        return router.replace(`/admin/products/${formData.slug}`);
       } else {
         setIsSaving(false);
       }
@@ -367,7 +370,18 @@ const ProductAdminPage: NextPage<ProductAdminPageProps> = ({ product }) => {
 // - Only if you need to pre-render a page whose data must be fetched at request time
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { slug = '' } = query;
-  const product = await dbProducts.getProductBySlug(slug.toString());
+  let product: IProduct | null;
+
+  if (slug === 'new') {
+    // create product
+    const tempProduct = JSON.parse(JSON.stringify(new ProductModel()));
+    delete tempProduct._id;
+    tempProduct.images = ['img1.png', 'img2.png'];
+
+    product = tempProduct;
+  } else {
+    product = await dbProducts.getProductBySlug(slug.toString());
+  }
 
   if (!product) {
     return {
