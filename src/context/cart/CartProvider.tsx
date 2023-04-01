@@ -120,7 +120,13 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       payload: updatedProductCart,
     });
 
-    createSnackbar('Item Added', 'success', '#2CA58D');
+    createSnackbar({
+      message: 'Item Added',
+      variant: 'success',
+      bgColor: '#2CA58D',
+      horizontal: 'center',
+      vertial: 'top',
+    });
   };
 
   const updateCartQuantity = (product: ICartProduct) => {

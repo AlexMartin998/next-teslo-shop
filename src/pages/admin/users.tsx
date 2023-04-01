@@ -8,20 +8,30 @@ import { AdminLayout } from '@/layouts';
 import { FullScreenLoading } from '@/shared/components';
 import { tesloApi } from '@/api/axios-client';
 import { IUser, ValidRoles } from '@/interfaces';
+import { useUiSnackbar } from '@/shared/hooks';
 
 const UsersPage: NextPage = () => {
   const { data, isLoading, mutate } = useSWR<IUser[]>('/api/admin/users');
+  const { createSnackbar } = useUiSnackbar();
   if (!data && isLoading) return <FullScreenLoading />;
 
   const onRoleUpdate = async (userId: string, newRole: ValidRoles) => {
     try {
       await tesloApi.put('/admin/users', { userId, role: newRole });
+      createSnackbar({
+        message: 'Role successfully updated',
+        variant: 'success',
+        bgColor: '#2CA58D',
+      });
 
       // nos evita useState y actualiza el state (re-render cambios) - after upd req
       mutate(data!.map(u => (u._id === userId ? { ...u, role: newRole } : u)));
     } catch (error) {
       console.log(error);
-      alert('Something wento wrong');
+      createSnackbar({
+        message: 'Something went wrong',
+        variant: 'error',
+      });
     }
   };
 
