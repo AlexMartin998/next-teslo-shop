@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useState } from 'react';
 import Cookies from 'js-cookie';
 import { isAxiosError } from 'axios';
+import { useSnackbar } from 'notistack';
 
 import { CartActionType, CartContext, cartReducer } from './';
 import { tesloApi } from '@/api/axios-client';
@@ -11,6 +12,7 @@ import {
   IOrderSummary,
   IShippingAddress,
 } from '@/interfaces';
+import { useUiSnackbar } from '@/shared/hooks';
 
 export interface CartState {
   cart: ICartProduct[];
@@ -35,6 +37,7 @@ const CART_INIT_STATE: CartState = {
 
 export const CartProvider = ({ children }: CartProviderProps) => {
   const [state, dispatch] = useReducer(cartReducer, CART_INIT_STATE);
+  const { createSnackbar } = useUiSnackbar();
 
   // // "isMounted" ensures that the status will NOT be Updated if the initialization has not yet been executed
   const [isMounted, setIsMounted] = useState(false);
@@ -116,6 +119,8 @@ export const CartProvider = ({ children }: CartProviderProps) => {
       type: CartActionType.updateProductsInCart,
       payload: updatedProductCart,
     });
+
+    createSnackbar('Item Added', 'success', '#2CA58D');
   };
 
   const updateCartQuantity = (product: ICartProduct) => {

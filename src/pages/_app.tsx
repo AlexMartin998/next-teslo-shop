@@ -3,6 +3,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { SWRConfig } from 'swr';
 import { SessionProvider } from 'next-auth/react';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { SnackbarProvider } from 'notistack';
 
 import { lightTheme } from '@/themes';
 import { AuthProvider, CartProvider, UIProvider } from '@/context';
@@ -24,15 +25,17 @@ export default function App({ Component, pageProps }: AppProps) {
           }}
         >
           <AuthProvider>
-            <CartProvider>
-              <UIProvider>
-                <ThemeProvider theme={lightTheme}>
-                  <CssBaseline />
+            <SnackbarProvider maxSnack={3}>
+              <CartProvider>
+                <UIProvider>
+                  <ThemeProvider theme={lightTheme}>
+                    <CssBaseline />
 
-                  <Component {...pageProps} />
-                </ThemeProvider>
-              </UIProvider>
-            </CartProvider>
+                    <Component {...pageProps} />
+                  </ThemeProvider>
+                </UIProvider>
+              </CartProvider>
+            </SnackbarProvider>
           </AuthProvider>
         </SWRConfig>
       </PayPalScriptProvider>
