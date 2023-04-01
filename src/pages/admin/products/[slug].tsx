@@ -32,6 +32,7 @@ import { dbProducts, ProductModel } from '@/api';
 import { generateSlug, newProductFormSchema } from '@/shared/utils';
 import { IProduct, IType } from '@/interfaces';
 import { tesloApi } from '@/api/axios-client';
+import { useUiSnackbar } from '@/shared/hooks';
 
 const validTypes = ['shirts', 'pants', 'hoodies', 'hats'];
 const validGender = ['men', 'women', 'kid', 'unisex'];
@@ -58,7 +59,8 @@ const ProductAdminPage: NextPage<ProductAdminPageProps> = ({ product }) => {
     resolver: yupResolver(newProductFormSchema),
   });
   const [newTagValue, setNewTagValue] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null); // no re-render when it changes
+  const fileInputRef = useRef<HTMLInputElement>(null); //o no re-render when it changes
+  const { createSnackbar } = useUiSnackbar();
 
   const onDeleteTag = (tag: string) => {
     const updatedTags = getValues('tags').filter(t => t !== tag);
@@ -140,6 +142,11 @@ const ProductAdminPage: NextPage<ProductAdminPageProps> = ({ product }) => {
         return router.replace(`/admin/products/${formData.slug}`);
       } else {
         setIsSaving(false);
+        createSnackbar({
+          message: 'Product successfully updated',
+          variant: 'success',
+          bgColor: '#2CA58D',
+        });
       }
     } catch (error) {
       console.log(error);
@@ -422,7 +429,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   let product: IProduct | null;
 
   if (slug === 'new') {
-    // create product 
+    // create product
     const tempProduct = JSON.parse(JSON.stringify(new ProductModel()));
     delete tempProduct._id;
     tempProduct.images = [];
