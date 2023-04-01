@@ -37,9 +37,22 @@ docker compose -f docker-compose.dev.yml down
 
 ```
 
+#### Executing SEED
+
+```bash
+# HTTP Get request
+
+curl http://localhost:3000/api/seed
+```
+
 ### Run the production server with Docker 🐳 :
 
 ```bash
+# run db
+docker compose -f docker-compose.dev.yml up --build
+
+# Executing SEED: HTTP Get request
+curl http://localhost:3000/api/seed
 
 # docker compose
 docker compose up --build -d
@@ -54,8 +67,6 @@ To see the real-time behavior you can log in with:
 - User: `david@martin.com` and password `123123`
 
 <a href="https://next-teslo-shop-six.vercel.app" target="_blank">Demo</a>
-
-
 
 ### Screenshots
 
